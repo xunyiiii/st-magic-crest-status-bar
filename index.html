@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Magic Crest Status Bar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          filter: drop-shadow(0 0 10px var(--glow-color))
+            drop-shadow(0 0 20px var(--glow-color));
+          opacity: 0.8;
+        }
+        50% {
+          filter: drop-shadow(0 0 25px var(--glow-color))
+            drop-shadow(0 0 40px var(--glow-color));
+          opacity: 1;
+        }
+      }
+
+      @keyframes flow-dash {
+        from {
+          stroke-dashoffset: 1000;
+        }
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      @keyframes energy-flicker {
+        0%,
+        100% {
+          opacity: 1;
+          filter: brightness(1.5);
+        }
+        50% {
+          opacity: 0.6;
+          filter: brightness(1.1);
+        }
+      }
+
+      @keyframes flicker-white {
+        0%,
+        100% {
+          opacity: 1;
+          filter: brightness(2);
+        }
+        50% {
+          opacity: 0.3;
+          filter: brightness(1);
+        }
+      }
+
+      .animate-pulse-glow {
+        animation: pulse-glow 3s ease-in-out infinite;
+      }
+      .animate-flow-charging {
+        animation: flow-dash 4s linear infinite;
+      }
+      .animate-flow-overflow {
+        animation: flow-dash 2s linear infinite;
+      }
+      .animate-flow-bloom {
+        animation: flow-dash 0.8s linear infinite;
+      }
+      .animate-energy-flicker {
+        animation: energy-flicker 0.4s ease-in-out infinite;
+      }
+      .animate-flicker-white {
+        animation: flicker-white 0.3s ease-in-out infinite;
+      }
+
+      body {
+        background-color: white;
+        color: #1e293b;
+        margin: 0;
+        padding: 4px;
+        overflow: hidden;
+      }
+
+      .glass-card {
+        background: #f9e8e1;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+      }
+
+      .track {
+        height: 6px;
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 3px;
+        overflow: hidden;
+        flex-grow: 1;
+      }
+
+      .fill {
+        height: 100%;
+        transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@19.0.0",
+          "react-dom": "https://esm.sh/react-dom@19.0.0",
+          "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+          "lodash": "https://esm.sh/lodash@4.17.21",
+          "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+          "react/": "https://esm.sh/react@^19.2.3/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
