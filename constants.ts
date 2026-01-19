@@ -1,72 +1,69 @@
-
-import { CrestLevel } from './types';
-
 export const CREST_LEVEL_COLORS: Record<number, string> = {
-  0: '#94a3b8', // 未烙印
-  1: '#ffb3c1', // Lv.1
-  2: '#ff85a1', // Lv.2
-  3: '#ff4d6d', // Lv.3
-  4: '#c9184a', // Lv.4
-  5: '#a4133c'  // Lv.5
+  0: "#94a3b8", // 未烙印
+  1: "#ffb3c1", // Lv.1
+  2: "#ff85a1", // Lv.2
+  3: "#ff4d6d", // Lv.3
+  4: "#c9184a", // Lv.4
+  5: "#a4133c", // Lv.5
 };
 
 export const CORRUPTION_LEVELS = [
-  { min: 0, max: 20, label: '尊严囚笼' },
-  { min: 21, max: 40, label: '认知失调' },
-  { min: 41, max: 60, label: '背德窃喜' },
-  { min: 61, max: 80, label: '献祭渴望' },
-  { min: 81, max: 100, label: '完美祭品' }
+  { min: 0, max: 20, label: "尊严囚笼" },
+  { min: 21, max: 40, label: "认知失调" },
+  { min: 41, max: 60, label: "背德窃喜" },
+  { min: 61, max: 80, label: "献祭渴望" },
+  { min: 81, max: 100, label: "完美祭品" },
 ];
 
 /**
- * 核心装备组定义 (体内、穿越、展示)
+ * 核心装备组定义 (体内、穿刺、展示)
  */
 export const CORE_GEAR_GROUPS = [
-  { 
-    id: 'internal', 
-    label: '体内刺激', 
-    icon: 'fa-vials', 
+  {
+    id: "internal",
+    label: "体内刺激",
+    icon: "fa-vials",
     slots: [
-      { label: '通道', path: '体内.通道' },
-      { label: '菊花', path: '体内.菊花' },
-      { label: '水道', path: '体内.水道' }
-    ]
+      { label: "阴道", path: "体内.阴道" },
+      { label: "后庭", path: "体内.后庭" },
+      { label: "尿道", path: "体内.尿道" },
+    ],
   },
-  { 
-    id: 'crossing', 
-    label: '穿越触媒', 
-    icon: 'fa-gem', 
+  {
+    id: "crossing",
+    label: "穿刺触媒",
+    icon: "fa-gem",
     slots: [
-      { label: '突点', path: '穿越.突点' },
-      { label: '肚脐', path: '穿越.肚脐' },
-      { label: '结缔', path: '穿越.结缔' }
-    ]
+      { label: "乳头", path: "穿刺.乳头" },
+      { label: "肚脐", path: "穿刺.肚脐" },
+      { label: "阴蒂", path: "穿刺.阴蒂" },
+    ],
   },
-  { 
-    id: 'display', 
-    label: '公开展示', 
-    icon: 'fa-star', 
+  {
+    id: "display",
+    label: "公开展示",
+    icon: "fa-star",
     slots: [
-      { label: '胸针', path: '公开展示.胸针' },
-      { label: '腰链', path: '公开展示.腰链' },
-      { label: '饰链', path: '公开展示.饰链' }
-    ]
-  }
+      { label: "胸针", path: "公开展示.胸针" },
+      { label: "腰链", path: "公开展示.腰链" },
+      { label: "饰链", path: "公开展示.饰链" },
+    ],
+  },
 ];
 
 export const UI_DESIGN = {
   // 模拟皮肤背景色 (白皙感)
-  CARD_BG: 'linear-gradient(135deg, #fffcfb 0%, #fff0eb 100%)',
-  ACCENT_PINK: '#ff4d6d',
-  BASE_FONT_SIZE: '14px',
-  LARGE_FONT_SIZE: '16px'
+  CARD_BG: "linear-gradient(135deg, #fffcfb 0%, #fff0eb 100%)",
+  ACCENT_PINK: "#ff4d6d",
+  BASE_FONT_SIZE: "14px",
+  LARGE_FONT_SIZE: "16px",
 };
 
 export const ANIMATION_CONFIG = {
-  BREATH_SPEED: '3.5s',
-  CHARGE_SPEED: '2s',
-  OVERFLOW_SPEED: '1.2s',
-  BLOOM_SPEED: '0.6s'
+  BREATH_SPEED: "3.5s",
+  CHARGE_SPEED: "2s",
+  OVERFLOW_SPEED: "1.2s",
+  BLOOM_SPEED: "0.6s",
 };
 
 export const SVG_PATHS = [
@@ -110,5 +107,5 @@ export const SVG_PATHS = [
   "M3063 1053 c9 -2 25 -2 35 0 9 3 -1 5 -18 5 -19 0 -27 -2 -17 -5z",
   "M2373 943 c-7 -2 -13 -11 -13 -20 0 -8 -10 -23 -22 -33 -35 -29 -14 -54 47 -58 29 -2 61 -12 78 -24 l30 -22 -7 50 c-9 67 -70 125 -113 107z",
   "M2679 911 c-33 -33 -39 -45 -39 -81 l0 -43 21 19 c13 12 42 21 76 24 69 6 91 30 56 60 -13 10 -23 25 -23 33 0 14 -20 27 -42 27 -6 0 -28 -17 -49 -39z",
-  "M2527 248 c-23 -12 -22 -21 9 -69 14 -23 24 -50 21 -60 -10 -39 56 -6 91 45 25 36 28 59 10 74 -18 14 -111 22 -131 10z"
+  "M2527 248 c-23 -12 -22 -21 9 -69 14 -23 24 -50 21 -60 -10 -39 56 -6 91 45 25 36 28 59 10 74 -18 14 -111 22 -131 10z",
 ];
