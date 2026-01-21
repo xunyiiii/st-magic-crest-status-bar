@@ -40,6 +40,7 @@ export interface CharacterState {
   };
   env: {
     location: string;
+    date: string;
     time: string;
     周围人群: string;
     环境噪音: string;
