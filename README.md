@@ -1,12 +1,43 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Magic Crest Status Bar
 
-# Run and deploy your AI Studio app
+## 信息
 
-This contains everything you need to run your app locally.
+The status bar applicable to MVU Zod in SillyTavern
 
-View your app in AI Studio: https://ai.studio/apps/drive/1sRqge2YavRbDYV2A9zCwg0nsjsuyAGEs
+jsDelivr地址
+
+
+
+### 前置
+- [SillyTavern](https://sillytavern.pro/)
+- [Tavern-Helper](https://n0vi028.github.io/JS-Slash-Runner-Doc/)
+- [MagVarUpdate](https://github.com/MagicalAstrogy/MagVarUpdate)
+- 角色Lingyue
+
+### 使用
+
+- **自动式**
+
+  导入角色即可；
+
+- **手动式**
+
+    1. 新建局部正则
+    2. 查找正则表达式填`<StatusPlaceHolderImpl/>`;
+    3. 替换为以下，注意是原文，包括头尾的```标记；
+
+        ````html
+        ```html
+        <body>
+          <script>
+            $('body').load('http://localhost:4173/')
+          </script>
+        </body>
+        ```
+        ````
+
+
+
 
 ## Run Locally
 
@@ -15,6 +46,5 @@ View your app in AI Studio: https://ai.studio/apps/drive/1sRqge2YavRbDYV2A9zCwg0
 
 1. Install dependencies:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
