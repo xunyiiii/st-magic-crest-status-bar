@@ -1,94 +1,135 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Magic Crest Status Bar</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <style>
       /* 呼吸发光动画 */
       @keyframes pulse-glow {
-        0%, 100% { 
-          filter: drop-shadow(0 0 10px var(--glow-color)) drop-shadow(0 0 5px white); 
-          opacity: 0.7; 
+        0%,
+        100% {
+          filter: drop-shadow(0 0 10px var(--glow-color))
+            drop-shadow(0 0 5px white);
+          opacity: 0.7;
           transform: scale(0.98);
         }
-        50% { 
-          filter: drop-shadow(0 0 30px var(--glow-color)) drop-shadow(0 0 15px var(--glow-color)); 
-          opacity: 1; 
+        50% {
+          filter: drop-shadow(0 0 30px var(--glow-color))
+            drop-shadow(0 0 15px var(--glow-color));
+          opacity: 1;
           transform: scale(1);
         }
       }
-      
+
       /* 能量线流动动画 */
       @keyframes flow-dash {
-        from { stroke-dashoffset: 4000; }
-        to { stroke-dashoffset: 0; }
-      }
-      
-      /* 高能态色彩抖动 */
-      @keyframes energy-flicker {
-        0%, 100% { opacity: 0.8; filter: brightness(1.6) contrast(1.2); }
-        50% { opacity: 0.4; filter: brightness(1.1) contrast(0.9); }
+        from {
+          stroke-dashoffset: 4000;
+        }
+        to {
+          stroke-dashoffset: 0;
+        }
       }
 
-      .animate-pulse-glow { animation: pulse-glow 3.5s ease-in-out infinite; transform-origin: center center; }
-      .animate-flow-charging { animation: flow-dash 4s linear infinite; }
-      .animate-flow-overflow { animation: flow-dash 2s linear infinite; }
-      .animate-flow-bloom { animation: flow-dash 0.8s linear infinite; }
-      .animate-energy-flicker { animation: energy-flicker 0.4s ease-in-out infinite; }
-      
+      /* 高能态色彩抖动 */
+      @keyframes energy-flicker {
+        0%,
+        100% {
+          opacity: 0.8;
+          filter: brightness(1.6) contrast(1.2);
+        }
+        50% {
+          opacity: 0.4;
+          filter: brightness(1.1) contrast(0.9);
+        }
+      }
+
+      .animate-pulse-glow {
+        animation: pulse-glow 3.5s ease-in-out infinite;
+        transform-origin: center center;
+      }
+      .animate-flow-charging {
+        animation: flow-dash 4s linear infinite;
+      }
+      .animate-flow-overflow {
+        animation: flow-dash 2s linear infinite;
+      }
+      .animate-flow-bloom {
+        animation: flow-dash 0.8s linear infinite;
+      }
+      .animate-energy-flicker {
+        animation: energy-flicker 0.4s ease-in-out infinite;
+      }
+
       body {
-        background-color: #f8fafc;
+        background-color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: 8px;
         color: #1e293b;
         margin: 0;
-        padding: 4px;
-        overflow: hidden;
-        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        padding: 0;
+        /* 移除 overflow: hidden 解决父窗口高度无限增加的 Bug */
+        overflow-x: hidden;
+        overflow-y: auto;
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
       }
 
       .glass-card {
-        border-radius: 20px;
+        border-radius: 8px;
         backdrop-filter: blur(8px);
         border: 1px solid rgba(255, 255, 255, 0.6);
         transition: all 0.3s ease;
       }
 
       .track {
-        border-radius: 10px;
+        border-radius: 8px;
         overflow: hidden;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-        /* 移除 flex-grow: 1 以防止垂直拉伸 */
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
       }
 
       .fill {
         height: 100%;
         transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-        border-radius: 10px;
+        border-radius: 8px;
       }
-      
+
       /* 自定义滚动条 */
-      ::-webkit-scrollbar { width: 4px; }
-      ::-webkit-scrollbar-track { background: transparent; }
-      ::-webkit-scrollbar-thumb { background: rgba(244, 63, 94, 0.2); border-radius: 10px; }
+      ::-webkit-scrollbar {
+        width: 4px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(244, 63, 94, 0.2);
+        border-radius: 8px;
+      }
     </style>
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@19.0.0",
-    "react-dom": "https://esm.sh/react-dom@19.0.0",
-    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-    "lodash": "https://esm.sh/lodash@4.17.21",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/"
-  }
-}
-</script>
-</head>
-<body>
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@19.0.0",
+          "react-dom": "https://esm.sh/react-dom@19.0.0",
+          "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+          "lodash": "https://esm.sh/lodash@4.17.21",
+          "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+          "react/": "https://esm.sh/react@^19.2.3/"
+        }
+      }
+    </script>
+  </head>
+  <body>
     <div id="root"></div>
-<script type="module" src="/index.tsx"></script>
-</body>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>

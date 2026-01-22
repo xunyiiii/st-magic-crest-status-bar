@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { ActivityState } from '../types';
-import { CREST_LEVEL_COLORS, SVG_PATHS, ANIMATION_CONFIG } from '../constants';
+import { CREST_LEVEL_COLORS, SVG_PATHS } from '../constants';
 
 interface MagicCrestProps {
   level: number;
@@ -10,7 +9,14 @@ interface MagicCrestProps {
 }
 
 const MagicCrest: React.FC<MagicCrestProps> = ({ level, activity, isBranded }) => {
-  const baseColor = isBranded ? (CREST_LEVEL_COLORS[level] || CREST_LEVEL_COLORS[1]) : CREST_LEVEL_COLORS[0];
+  /**
+   * 根据进化等级获取 5 种等级的基础状态颜色
+   */
+  const getCrestStageColors = (lvl: number): string => {
+    return CREST_LEVEL_COLORS[lvl] || CREST_LEVEL_COLORS[1];
+  };
+
+  const baseColor = isBranded ? getCrestStageColors(level) : CREST_LEVEL_COLORS[0];
 
   const getGlowStyle = () => {
     const style: React.CSSProperties = {
@@ -45,6 +51,10 @@ const MagicCrest: React.FC<MagicCrestProps> = ({ level, activity, isBranded }) =
         break;
       case '绽放':
         style.filter = `drop-shadow(0 0 25px white) drop-shadow(0 0 50px ${baseColor})`;
+        break;
+      case '常态':
+      default:
+        style.filter = `drop-shadow(0 0 8px ${baseColor})`;
         break;
     }
     return style;

@@ -58,7 +58,6 @@ const App: React.FC = () => {
           震动等级: 0,
         }),
         公开展示: _.get(ly, "装备.公开展示", {}),
-        // Fix: Changed 'boolean' type identifier to 'false' value in the default object
         兽化组件: _.get(ly, "装备.兽化组件", { 尾巴: null, 伪装延展: false }),
       },
       disguise: _.get(ly, "伪装", {}),
@@ -104,19 +103,20 @@ const App: React.FC = () => {
   if (!data)
     return (
       <div className="p-8 text-rose-300 animate-pulse font-black text-xl italic">
-        凌月状态
+        凌月状态载入中...
       </div>
     );
 
   const isBranded = data.tattoo.进化等级 > 0;
 
   return (
-    <div className="flex flex-col gap-4 p-4 min-h-screen bg-slate-50 font-sans text-[14px]">
+    /* 关键：使用 h-auto 替代 min-h-screen 解决父窗口 .load() 高度无限增长的问题 */
+    <div className="flex flex-col gap-4 p-4 h-auto bg-slate-50 font-sans text-sm overflow-visible">
       {/* 左右分栏布局 */}
       <div className="grid grid-cols-2 gap-4">
         {/* 左侧：状态面板 */}
         <div
-          className="glass-card flex flex-col overflow-hidden"
+          className="glass-card flex flex-col overflow-hidden shadow-sm"
           style={{ background: UI_DESIGN.CARD_BG }}
         >
           {/* 头部装饰 */}
@@ -137,9 +137,9 @@ const App: React.FC = () => {
             </div>
           </div>
 
-          <div className="p-5 flex flex-col gap-6 overflow-y-auto">
-            {/* 状态进度条区域 - 调整为 grid-cols-1 使得每组占一行 */}
-            <div className="text-sm grid grid-cols-1 gap-y-4 items-start">
+          <div className="p-5 flex flex-col gap-6">
+            {/* 状态进度条区域 - 调整为 grid-cols-1 每组占一行 */}
+            <div className="text-sm grid grid-cols-1 gap-y-6 items-start">
               {[
                 {
                   label: "堕落度",
@@ -162,22 +162,24 @@ const App: React.FC = () => {
                   color: "bg-emerald-500",
                 },
               ].map((s) => (
-                <div
-                  key={s.label}
-                  className="flex flex-col gap-1.5 h-auto overflow-hidden shrink-0"
-                >
-                  <div className="flex justify-between font-black text-slate-600 leading-none items-center mb-0.5">
+                <div key={s.label} className="flex flex-col gap-2 w-full">
+                  <div className="flex justify-between font-black text-slate-600 leading-none items-center px-1">
                     <span className="flex items-center gap-1.5 truncate">
                       {s.label}
                     </span>
                     <span className="font-mono">{Math.round(s.val)}%</span>
                   </div>
+                  {/* 强制高度 10px */}
                   <div
-                    className="track bg-slate-200/50 relative overflow-hidden shrink-0"
-                    style={{ height: "10px", width: "100%" }}
+                    className="track bg-slate-200/50 relative overflow-hidden"
+                    style={{
+                      height: "10px",
+                      minHeight: "10px",
+                      maxHeight: "10px",
+                    }}
                   >
                     <div
-                      className={`fill ${s.color} absolute left-0 top-0`}
+                      className={`fill ${s.color} absolute left-0 top-0 shadow-inner`}
                       style={{ width: `${s.val}%`, height: "10px" }}
                     />
                   </div>
@@ -197,7 +199,7 @@ const App: React.FC = () => {
                     {data.env.date} {data.env.time}
                   </span>
                 </div>
-                <div className="flex flex-col gap-1.5 mt-1">
+                <div className="flex flex-col gap-1.5 mt-1 px-1">
                   <span className="flex items-center gap-2 truncate text-slate-500">
                     <i className="fas fa-map-marker-alt w-4 text-center text-rose-300"></i>
                     地点: {data.env.location}
@@ -223,7 +225,7 @@ const App: React.FC = () => {
               <h4 className="text-base font-black text-rose-300 uppercase tracking-widest flex items-center gap-2 border-b border-rose-50 pb-2">
                 <i className="fas fa-mask"></i> 伪装
               </h4>
-              <div className="text-sm flex flex-col gap-1.5 font-bold text-slate-600">
+              <div className="text-sm flex flex-col gap-1.5 font-bold text-slate-600 px-1">
                 <span className="truncate">
                   当前着装:{" "}
                   <span className="text-slate-500">
@@ -257,7 +259,7 @@ const App: React.FC = () => {
                 <i className="fas fa-brain"></i> 心理
               </h4>
               <div className="flex flex-col gap-2">
-                <div className="bg-white/50 p-3 rounded-lg italic">
+                <div className="bg-white/50 p-3 rounded-lg italic shadow-inner">
                   <span className="text-sm font-black text-slate-600 leading-relaxed">
                     “{data.psych.内心独白 || "......"}”
                   </span>
@@ -276,12 +278,12 @@ const App: React.FC = () => {
         <div className="flex flex-col gap-4">
           {/* 淫纹卡片 */}
           <div
-            className="glass-card flex flex-col items-center justify-between p-6 relative overflow-hidden shrink-0"
+            className="glass-card flex flex-col items-center justify-between p-6 relative overflow-hidden shrink-0 shadow-sm"
             style={{ background: UI_DESIGN.CARD_BG, minHeight: "480px" }}
           >
             <div className="text-lg w-full flex justify-between items-center text-rose-300 font-black tracking-widest z-10 shrink-0">
               <div className="flex items-center gap-2">
-                <span>淫纹</span>
+                <span>淫纹系统</span>
                 <div className="relative flex items-center justify-center ml-1 drop-shadow-sm">
                   <i className="fas fa-heart text-rose-500 text-3xl opacity-90"></i>
                   <span className="absolute text-sm font-black text-white pb-0.5">
@@ -307,7 +309,7 @@ const App: React.FC = () => {
             <div className="w-full grid grid-cols-2 gap-4 border-t-2 border-rose-200/50 pt-6 mt-2 z-10 shrink-0">
               <div className="flex flex-col items-center">
                 <span className="text-sm font-black text-slate-400 uppercase tracking-widest">
-                  活性
+                  能量活性
                 </span>
                 <span className="text-xl font-black text-rose-500 drop-shadow-md">
                   {data.tattoo.当前活性}
@@ -315,7 +317,7 @@ const App: React.FC = () => {
               </div>
               <div className="flex flex-col items-center border-l-2 border-rose-100">
                 <span className="text-sm font-black text-slate-400 uppercase tracking-widest">
-                  温度
+                  实时温度
                 </span>
                 <span
                   className="text-xl font-mono font-black transition-colors duration-1000"
@@ -408,7 +410,7 @@ const App: React.FC = () => {
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-slate-400 font-black">
-                      尾巴:
+                      尾巴组件:
                     </span>
                     <span
                       className={`text-sm font-bold ${data.gear.兽化组件.尾巴 ? "text-rose-500" : "text-slate-300"}`}
@@ -436,7 +438,7 @@ const App: React.FC = () => {
                 <div className="flex items-center gap-4">
                   <i className="fas fa-link text-rose-400 text-sm"></i>
                   <div className="flex flex-col">
-                    <span className="text-sm font-black text-slate-400 uppercase leading-none mb-1">
+                    <span className="text-sm font-black text-slate-400 uppercase leading-none mb-1 tracking-tighter">
                       圣洁锁链
                     </span>
                     <div className="flex gap-3">
@@ -448,7 +450,7 @@ const App: React.FC = () => {
                       <span
                         className={`text-sm font-bold ${data.gear.连接系统.全身锁链 ? "text-rose-600" : "text-slate-300"}`}
                       >
-                        身体链：
+                        身体链:{" "}
                         {data.gear.连接系统.全身锁链 ? "圣洁锁链" : "未佩戴"}
                       </span>
                     </div>
@@ -459,7 +461,7 @@ const App: React.FC = () => {
                     <span className="text-xs text-slate-400 font-black uppercase tracking-tighter">
                       运作模式
                     </span>
-                    <span className="text-xs font-black text-rose-500">
+                    <span className="text-xs font-black text-rose-500 leading-none">
                       {data.gear.连接系统.运作模式}
                     </span>
                   </div>
@@ -467,7 +469,7 @@ const App: React.FC = () => {
                     <span className="text-xs text-slate-400 font-black uppercase tracking-tighter">
                       震动等级
                     </span>
-                    <span className="text-xs font-black text-rose-500">
+                    <span className="text-xs font-black text-rose-500 leading-none">
                       ⚡{data.gear.连接系统.震动等级}
                     </span>
                   </div>
@@ -480,7 +482,7 @@ const App: React.FC = () => {
 
       {/* 底部里程碑卡片 */}
       <div
-        className="glass-card overflow-hidden shrink-0 shadow-lg"
+        className="glass-card overflow-hidden shrink-0 shadow-lg mb-6"
         style={{ background: UI_DESIGN.CARD_BG }}
       >
         <button
