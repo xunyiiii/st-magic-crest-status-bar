@@ -4,9 +4,7 @@
 
 The status bar applicable to MVU Zod in SillyTavern
 
-jsDelivr地址
-
-
+jsDelivr地址：[cdn.jsdelivr.net/gh/xunyiiii/st-magic-crest-status-bar/dist/index.html](https://cdn.jsdelivr.net/gh/xunyiiii/st-magic-crest-status-bar/dist/index.html)
 
 ### 前置
 - [SillyTavern](https://sillytavern.pro/)
