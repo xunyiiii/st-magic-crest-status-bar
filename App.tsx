@@ -70,7 +70,7 @@ const App: React.FC = () => {
         date: common.日期 || "2024年5月20日",
         time: common.时间 || "14:30",
         周围人群: env.周围人群 || "无",
-        环境噪音: env.环境噪音 || "平静",
+        噪音: env.噪音 || "平静",
         安全等级: env.安全等级 || "高",
       },
     });
@@ -213,7 +213,7 @@ const App: React.FC = () => {
                   </span>
                   <span className="flex items-center gap-2 truncate text-slate-500">
                     <i className="fas fa-volume-up w-4 text-center text-rose-300"></i>
-                    环境噪音: {data.env.环境噪音}
+                    噪音: {data.env.噪音}
                   </span>
                   <span className="flex items-center gap-2 text-rose-400 font-black">
                     <i className="fas fa-shield-alt w-4 text-center"></i>
