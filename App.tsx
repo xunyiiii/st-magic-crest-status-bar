@@ -2,7 +2,7 @@ import _ from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import MagicCrest from "./components/MagicCrest";
 import { CORE_GEAR_GROUPS, CORRUPTION_LEVELS, UI_DESIGN } from "./constants";
-import { CharacterState, CrestLevel } from "./types";
+import { CharacterState, CrestLevel, MemoryEntry } from "./types";
 
 declare global {
   interface Window {
@@ -24,7 +24,7 @@ const safeErrorCatched = <T extends any[], U>(fn: (...args: T) => U) =>
 const App: React.FC = () => {
   const [data, setData] = useState<CharacterState | null>(null);
   const [memoryOpen, setMemoryOpen] = useState(false);
-  const [memData, setMemData] = useState<Record<string, string>>({});
+  const [memData, setMemData] = useState<Record<string, MemoryEntry>>({});
 
   const update = safeErrorCatched(() => {
     const v = safeGetAllVariables();
@@ -50,7 +50,10 @@ const App: React.FC = () => {
       gear: {
         体内: _.get(ly, "装备.体内", {}),
         穿刺: _.get(ly, "装备.穿刺", {}),
-        刺激模组: _.get(ly, "装备.刺激模组", { 部署位置: {}, 控制模式: "关" }),
+        刺激模组: _.get(ly, "装备.刺激模组", {
+          部署位置: {},
+          控制模式: "待机",
+        }),
         连接系统: _.get(ly, "装备.连接系统", {
           项圈: null,
           全身锁链: false,
@@ -382,17 +385,26 @@ const App: React.FC = () => {
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
+                  {/* Fix: Explicitly cast Object.entries result to resolve 'unknown' type property access on item.震动 */}
                   {Object.keys(data.gear.刺激模组.部署位置).length > 0 ? (
-                    Object.entries(data.gear.刺激模组.部署位置).map(
-                      ([pos, item]) => (
-                        <span
-                          key={pos}
-                          className="bg-rose-100 text-rose-600 px-2 py-0.5 rounded-md text-xs font-black border border-rose-200"
-                        >
-                          {pos}: {item}
-                        </span>
-                      ),
-                    )
+                    (
+                      Object.entries(data.gear.刺激模组.部署位置) as [
+                        string,
+                        { 震动: boolean },
+                      ][]
+                    ).map(([pos, item]) => (
+                      <span
+                        key={pos}
+                        className={`bg-rose-100 text-rose-600 px-2 py-0.5 rounded-md text-xs font-black border border-rose-200 flex items-center gap-1 ${item.震动 ? "animate-pulse" : ""}`}
+                      >
+                        {pos}{" "}
+                        {item.震动 ? (
+                          <i className="fas fa-bolt text-[10px]"></i>
+                        ) : (
+                          ""
+                        )}
+                      </span>
+                    ))
                   ) : (
                     <span className="text-slate-300 italic text-xs">
                       未佩戴
@@ -498,21 +510,29 @@ const App: React.FC = () => {
           ></i>
         </button>
         {memoryOpen && (
-          <div className="p-5 pt-0 grid grid-cols-2 gap-4 max-h-[300px] overflow-y-auto animate-fade-in">
+          <div className="p-5 pt-0 grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[400px] overflow-y-auto animate-fade-in">
+            {/* Fix: Explicitly cast Object.entries result to resolve 'unknown' type property access on entry.时间 and entry.内容 */}
             {Object.entries(memData).length > 0 ? (
-              Object.entries(memData).map(([id, desc]) => (
-                <div
-                  key={id}
-                  className="bg-white/60 p-4 rounded-xl border-l-4 border-rose-400 shadow-sm flex flex-col gap-1 hover:bg-white transition-all hover:scale-[1.02] cursor-default"
-                >
-                  <span className="font-mono text-xs text-rose-300 font-black uppercase tracking-tighter">
-                    事件Id: {id}
-                  </span>
-                  <p className="font-bold text-slate-600 text-sm leading-snug">
-                    {desc}
-                  </p>
-                </div>
-              ))
+              (Object.entries(memData) as [string, MemoryEntry][]).map(
+                ([id, entry]) => (
+                  <div
+                    key={id}
+                    className="bg-white/60 p-4 rounded-xl border-l-4 border-rose-400 shadow-sm flex flex-col gap-2 hover:bg-white transition-all hover:scale-[1.01] cursor-default"
+                  >
+                    <div className="flex justify-between items-center border-b border-rose-50 pb-1">
+                      <span className="font-mono text-[10px] text-rose-300 font-black uppercase tracking-tighter">
+                        事件 ID: {id}
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-bold font-mono">
+                        {entry.时间}
+                      </span>
+                    </div>
+                    <p className="font-bold text-slate-600 text-sm leading-relaxed">
+                      {entry.内容}
+                    </p>
+                  </div>
+                ),
+              )
             ) : (
               <div className="col-span-2 text-center py-12 text-slate-300 italic font-black text-sm tracking-widest uppercase">
                 无记录...

@@ -2,6 +2,11 @@ export type ActivityState = "沉寂" | "呼吸" | "充能" | "满溢" | "绽放"
 
 export type CrestLevel = 0 | 1 | 2 | 3 | 4 | 5;
 
+export interface MemoryEntry {
+  内容: string;
+  时间: string;
+}
+
 export interface CharacterState {
   stats: {
     堕落度: number;
@@ -18,7 +23,10 @@ export interface CharacterState {
   gear: {
     体内: { 阴道: string | null; 后庭: string | null; 尿道: string | null };
     穿刺: { 乳头: string | null; 肚脐: string | null; 阴蒂: string | null };
-    刺激模组: { 部署位置: Record<string, string>; 控制模式: string };
+    刺激模组: {
+      部署位置: Record<string, { 震动: boolean }>;
+      控制模式: "待机" | "随机游走" | "声控惩罚" | "心跳同频" | string;
+    };
     连接系统: {
       项圈: string | null;
       全身锁链: boolean;
