@@ -281,7 +281,7 @@ const App: React.FC = () => {
         <div className="flex flex-col gap-4">
           {/* 淫纹卡片 */}
           <div
-            className="glass-card flex flex-col items-center justify-between p-6 relative overflow-hidden shrink-0 shadow-sm"
+            className="glass-card flex flex-col items-center justify-between p-4 relative overflow-hidden shrink-0 shadow-sm"
             style={{ background: UI_DESIGN.CARD_BG, minHeight: "480px" }}
           >
             <div className="text-lg w-full flex justify-between items-center text-rose-300 font-black tracking-widest z-10 shrink-0">
@@ -358,7 +358,7 @@ const App: React.FC = () => {
                           className={`px-2 py-1.5 rounded-lg border-2 text-sm flex justify-between items-center transition-all ${active ? "bg-white border-rose-200 text-rose-500 font-bold shadow-sm" : "bg-slate-50/40 border-slate-100 text-slate-300"}`}
                         >
                           <span className="truncate">{s.label}</span>
-                          <span className="truncate opacity-70 italic ml-1">
+                          <span className="truncate opacity-70 ml-1">
                             {active
                               ? typeof v === "string"
                                 ? v.split("·").pop()
