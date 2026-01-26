@@ -297,7 +297,7 @@ const App: React.FC = () => {
               <span
                 className={`text-sm not-italic px-3 py-1 rounded shadow-sm uppercase font-black ${isBranded ? "bg-rose-500 text-white" : "bg-slate-300 text-slate-500"}`}
               >
-                {isBranded ? "ACTIVE" : "未烙印"}
+                {isBranded ? "激活中" : "未烙印"}
               </span>
             </div>
 
@@ -521,7 +521,7 @@ const App: React.FC = () => {
                   >
                     <div className="flex justify-between items-center border-b border-rose-50 pb-1">
                       <span className="font-mono text-[10px] text-rose-300 font-black uppercase tracking-tighter">
-                        事件 ID: {id}
+                        事件名称: {id}
                       </span>
                       <span className="text-[10px] text-slate-400 font-bold font-mono">
                         {entry.时间}
