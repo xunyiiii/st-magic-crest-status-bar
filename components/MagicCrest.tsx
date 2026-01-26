@@ -35,6 +35,7 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
       return style;
     }
 
+    /* 【配置说明】：此处调整“光晕尺寸” (drop-shadow 的第三个参数) */
     switch (activity) {
       case "沉寂":
         style.filter = `drop-shadow(0 0 4px ${baseColor})`;
@@ -82,7 +83,9 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
           </linearGradient>
         </defs>
 
-        <g transform="translate(0, 366) scale(0.1, -0.1)">
+        {/* 【配置说明】：此处调整“纹身显示尺寸” (修改 scale 的值，缩小以容纳光晕) 
+            由原来的 scale(0.1, -0.1) 调整为 scale(0.08, -0.08)，并配合 translate 居中 */}
+        <g transform="translate(50, 335) scale(0.08, -0.08)">
           {/* 背景阴影层 */}
           {SVG_PATHS.map((d, i) => (
             <path
@@ -121,6 +124,7 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
                 fill="none"
                 stroke="url(#glow-grad)"
                 strokeWidth="25"
+                /* 【配置说明】：此处调整“流光拖尾长度” (strokeDasharray 的第一个参数是流光长度，第二个是间距) */
                 strokeDasharray="900 3000"
                 className={
                   activity === "绽放"
