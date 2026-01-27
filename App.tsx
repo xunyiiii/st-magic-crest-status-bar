@@ -25,6 +25,7 @@ const App: React.FC = () => {
   const [data, setData] = useState<CharacterState | null>(null);
   const [memoryOpen, setMemoryOpen] = useState(false);
   const [memData, setMemData] = useState<MemoryEntry[]>([]);
+  const [incompatible, setIncompatible] = useState(false);
 
   const update = safeErrorCatched(() => {
     const v = safeGetAllVariables();
@@ -32,6 +33,18 @@ const App: React.FC = () => {
     const common = _.get(v, "stat_data", {});
     const env = _.get(v, "stat_data.环境", {});
     const mem = _.get(v, "stat_data.记忆", {});
+    const deployPos = _.get(ly, "装备.刺激模组.部署位置", []);
+
+    // 检测结构是否为旧版的 keymap 对象结构
+    const isOldMem = mem && !Array.isArray(mem) && typeof mem === "object";
+    const isOldDeploy =
+      deployPos && !Array.isArray(deployPos) && typeof deployPos === "object";
+
+    if (isOldMem || isOldDeploy) {
+      setIncompatible(true);
+    } else {
+      setIncompatible(false);
+    }
 
     setMemData(Array.isArray(mem) ? mem : []);
     setData({
@@ -115,6 +128,16 @@ const App: React.FC = () => {
   return (
     /* 关键：使用 h-auto 替代 min-h-screen 解决父窗口 .load() 高度无限增长的问题 */
     <div className="flex flex-col gap-4 p-4 h-auto bg-slate-50 font-sans text-sm overflow-visible">
+      {/* 结构不兼容提示横幅 */}
+      {incompatible && (
+        <div className="bg-amber-100 border-2 border-amber-400 p-3 rounded-xl mb-2 flex items-center gap-3 animate-bounce-short">
+          <i className="fas fa-exclamation-triangle text-amber-600 text-lg"></i>
+          <span className="text-amber-900 font-black">
+            状态栏更新，已与现有角色不兼容请到帖子更新角色或参照指引修改正则，帖子地址：https://discord.com/channels/1291925535324110879/1465406932549369938/1465406932549369938
+          </span>
+        </div>
+      )}
+
       {/* 左右分栏布局 */}
       <div className="grid grid-cols-2 gap-4">
         {/* 左侧：状态面板 */}
@@ -547,6 +570,11 @@ const App: React.FC = () => {
           to { transform: rotate(360deg); }
         }
         .animate-spin-slow { animation: spin-slow 8s linear infinite; }
+        @keyframes bounce-short {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-4px); }
+        }
+        .animate-bounce-short { animation: bounce-short 1s ease-in-out infinite; }
       `}</style>
     </div>
   );
