@@ -131,7 +131,7 @@ const App: React.FC = () => {
               </h2>
             </div>
             <div className="flex items-center gap-2">
-              <span className="bg-rose-500 text-white px-3 py-0.5 rounded-full text-base font-black italic">
+              <span className="bg-rose-500 text-white px-3 py-0.5 rounded-full text-base font-black">
                 阶段 {data.stats.当前阶段}
               </span>
               <span className="text-rose-500 font-black border-2 border-rose-200 px-3 py-0.5 rounded-full text-sm bg-white/60 shadow-sm">
@@ -243,13 +243,13 @@ const App: React.FC = () => {
                 </span>
                 <span className="truncate text-rose-500">
                   生理破绽:{" "}
-                  <span className="italic font-normal">
+                  <span className="font-normal">
                     {data.disguise.生理破绽 || "无"}
                   </span>
                 </span>
                 <span className="truncate text-rose-500">
                   当前借口:{" "}
-                  <span className="italic font-normal">
+                  <span className="font-normal">
                     {data.disguise.当前借口 || "暂无借口掩饰..."}
                   </span>
                 </span>
@@ -262,13 +262,13 @@ const App: React.FC = () => {
                 <i className="fas fa-brain"></i> 心理
               </h4>
               <div className="flex flex-col gap-2">
-                <div className="bg-white/50 p-3 rounded-lg italic shadow-inner">
+                <div className="bg-white/50 p-3 rounded-lg shadow-inner">
                   <span className="text-sm font-black text-slate-600 leading-relaxed">
                     “{data.psych.内心独白 || "......"}”
                   </span>
                 </div>
                 <div className="flex justify-end items-center px-1">
-                  <span className="text-sm font-bold text-slate-400 italic">
+                  <span className="text-sm font-bold text-slate-400">
                     公众印象: {data.psych.公众印象 || "普通讲师"}
                   </span>
                 </div>
@@ -377,7 +377,7 @@ const App: React.FC = () => {
             <div className="grid grid-cols-2 gap-4 mt-2">
               <div className="bg-white/60 p-3 rounded-xl border border-rose-100 shadow-sm">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-black text-slate-500 italic uppercase">
+                  <span className="text-sm font-black text-slate-500 uppercase">
                     <i className="fas fa-bolt mr-1"></i>刺激模组
                   </span>
                   <span className="text-xs font-bold text-rose-500 bg-rose-50 px-2 py-0.5 rounded border border-rose-100">
@@ -406,16 +406,14 @@ const App: React.FC = () => {
                       </span>
                     ))
                   ) : (
-                    <span className="text-slate-300 italic text-xs">
-                      未佩戴
-                    </span>
+                    <span className="text-slate-300 text-xs">未佩戴</span>
                   )}
                 </div>
               </div>
 
               <div className="bg-white/60 p-3 rounded-xl border border-rose-100 shadow-sm flex flex-col justify-between">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-black text-slate-500 italic uppercase">
+                  <span className="text-sm font-black text-slate-500 uppercase">
                     <i className="fas fa-paw mr-1"></i>兽化组件
                   </span>
                 </div>
@@ -534,7 +532,7 @@ const App: React.FC = () => {
                 ),
               )
             ) : (
-              <div className="col-span-2 text-center py-12 text-slate-300 italic font-black text-sm tracking-widest uppercase">
+              <div className="col-span-2 text-center py-12 text-slate-300 font-black text-sm tracking-widest uppercase">
                 无记录...
               </div>
             )}
