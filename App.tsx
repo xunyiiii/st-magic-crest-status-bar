@@ -35,10 +35,22 @@ const App: React.FC = () => {
     const mem = _.get(v, "stat_data.记忆", {});
     const deployPos = _.get(ly, "装备.刺激模组.部署位置", []);
 
-    // 检测结构是否为旧版的 keymap 对象结构
-    const isOldMem = mem && !Array.isArray(mem) && typeof mem === "object";
+    /**
+     * 判定逻辑优化：
+     * 1. 必须是对象且非 null (typeof === 'object' && x !== null)
+     * 2. 不能是数组 (!Array.isArray)
+     * 3. 必须包含至少一个键 (Object.keys().length > 0)，排除空对象或初始空态
+     */
+    const isOldMem =
+      mem &&
+      !Array.isArray(mem) &&
+      typeof mem === "object" &&
+      Object.keys(mem).length > 0;
     const isOldDeploy =
-      deployPos && !Array.isArray(deployPos) && typeof deployPos === "object";
+      deployPos &&
+      !Array.isArray(deployPos) &&
+      typeof deployPos === "object" &&
+      Object.keys(deployPos).length > 0;
 
     if (isOldMem || isOldDeploy) {
       setIncompatible(true);
