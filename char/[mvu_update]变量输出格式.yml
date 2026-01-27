@@ -1,0 +1,39 @@
+---
+变量输出格式:
+  rule:
+    - you must output the update analysis and the actual update commands at once in the end of the next reply
+    - the update commands works like the **JSON Patch (RFC 6902)** standard, must be a valid JSON array containing operation objects, but supports the following operations instead:
+        - replace: replace the value of existing paths
+        - delta: update the value of existing number paths by a delta value
+        - insert: insert new items into an object or array (using `-` as array index intends appending to the end)
+        - remove
+        - move
+    - don't update field names starts with `_` as they are readonly, such as `_变量`
+    # 新增约束1：JSON 必须合法，严格使用双引号，布尔值不加引号
+    - the JSON Patch array must be valid JSON, use double quotes only, and do not add quotes to boolean values (true/false)
+    # 优化后的约束2：区分「记忆」和「部署位置」的允许操作，明确格式
+    - for "记忆" variable: only use "insert" operation with path ending with "-" (e.g. "/记忆/-") for appending new memories.
+    - for "部署位置" variable: use "insert" operation with path ending with "-" (e.g. "/部署位置/-") for appending new positions, and use "remove" operation (e.g. "/部署位置/0") for deleting existing positions (array index starts from 0).
+  format: |-
+    <UpdateVariable>
+    <Analysis>$(IN ENGLISH, no more than 80 words)
+    - ${calculate time passed: ...}
+    - ${decide whether dramatic updates are allowed as it's in a special case or the time passed is more than usual: yes/no}
+    - ${analyze every variable based on its corresponding `check`, according only to current reply instead of previous plots: ...}
+    </Analysis>
+    <JSONPatch>
+    [
+      { "op": "replace", "path": "${/path/to/variable}", "value": "${new_value}" },
+      { "op": "delta", "path": "${/path/to/number/variable}", "value": "${positve_or_negative_delta}" },
+      { "op": "insert", "path": "${/path/to/object/new_key}", "value": "${new_value}" },
+      { "op": "insert", "path": "${/path/to/array/-}", "value": "${new_value}" },
+      # 以下是「记忆」和「部署位置」的具体正确示例（强制 AI 参考此格式输出）
+      { "op": "insert", "path": "/记忆/-", "value": { "名称": "事件名称", "内容": "事件详细描述", "时间": "YYYY年MM月DD日 HH:MM" } },
+      { "op": "insert", "path": "/部署位置/-", "value": { "点位": "锚点装备/身体部位名称", "震动": true/false } },
+      { "op": "remove", "path": "${/path/to/object/key}" },
+      { "op": "remove", "path": "${/path/to/array/0}" },
+      { "op": "move", "from": "${/path/to/variable}", "to": "${/path/to/another/path}" },
+      ...
+    ]
+    </JSONPatch>
+    </UpdateVariable>

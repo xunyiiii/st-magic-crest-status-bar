@@ -57,7 +57,7 @@ export interface CharacterState {
     date: string;
     time: string;
     周围人群: string;
-    环境噪音: string;
+    噪音: string;
     安全等级: string;
   };
 }

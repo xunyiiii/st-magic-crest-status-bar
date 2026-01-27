@@ -87,14 +87,22 @@ export const Schema = z.object({
         部署位置: z
           .array(
             // 数组单个元素的结构定义
-            z.object({
-              点位: z
-                .string()
-                .describe(
-                  "锚点装备/身体部位名称（如阴蒂环、乳环、宫颈塞·月之泪、阴蒂、乳头、G点、肛门、阴道穹窿）",
-                ),
-              震动: z.boolean().describe("是否处于震动中").default(false),
-            }),
+            z
+              .object({
+                点位: z
+                  .string()
+                  .describe(
+                    "锚点装备/身体部位名称（如阴蒂环、乳环、宫颈塞·月之泪、阴蒂、乳头、G点、肛门、阴道穹窿）",
+                  ),
+                震动: z.boolean().describe("是否处于震动中").default(false),
+              })
+              .transform((arr) => {
+                // 去除空元素，保持数组整洁（可选，防止删除后残留空对象）
+                return arr.filter(
+                  (item) => item.点位 && item.点位.trim() !== "",
+                );
+              })
+              .prefault(() => []),
           )
           .prefault(() => []),
         控制模式: z
@@ -198,17 +206,30 @@ export const Schema = z.object({
         时间: z
           .string()
           .describe("记忆发生的时间，格式：YYYY年MM月DD日 HH:MM")
-          .prefault(() => Date.now()),
+          .prefault(() =>
+            new Date()
+              .toLocaleString("zh-CN", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+              // 分步修正：精准替换，匹配目标格式
+              .replace(
+                /(\d{4})\/(\d{2})\/(\d{2}) (\d{2}):(\d{2})/,
+                "$1年$2月$3日 $4:$5",
+              ),
+          ),
       }),
     )
-    .transform((obj) => {
+    .transform((arr) => {
       // 步骤1：去重（根据「名称」字段，保留最后一次出现的记录）
       const uniqueArr = _(arr)
         .groupBy("名称") // 按名称分组
         .map((group) => _.last(group)) // 每组保留最后一条（最新添加的）
         .value();
       return _(uniqueArr)
-        .entries()
         .sortBy((item) => item.时间)
         .takeRight(20)
         .value();
