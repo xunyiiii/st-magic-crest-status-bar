@@ -21,6 +21,21 @@ const safeGetAllVariables = () =>
 const safeErrorCatched = <T extends any[], U>(fn: (...args: T) => U) =>
   window.errorCatched ? window.errorCatched(fn) : fn;
 
+/**
+ * 格式化装备显示名称的辅助函数
+ * 过滤 "[部位·名称]" 或 "部位·名称"，只返回 "名称"
+ */
+const formatGearDisplayName = (name: any): string => {
+  if (typeof name !== "string" || !name) return String(name || "");
+  // 去除可能存在的包裹中括号
+  const stripped = name.replace(/[\[\]]/g, "");
+  // 如果包含分隔符则取最后一段
+  if (stripped.includes("·")) {
+    return stripped.split("·").pop() || stripped;
+  }
+  return stripped;
+};
+
 const App: React.FC = () => {
   const [data, setData] = useState<CharacterState | null>(null);
   const [memoryOpen, setMemoryOpen] = useState(false);
@@ -316,7 +331,7 @@ const App: React.FC = () => {
         <div className="flex flex-col gap-4">
           {/* 淫纹卡片 */}
           <div
-            className="glass-card flex flex-col items-center justify-between p-4 relative overflow-hidden shrink-0 shadow-sm"
+            className="glass-card flex flex-col items-center justify-between p-4 relative overflow-visible shrink-0 shadow-sm"
             style={{ background: UI_DESIGN.CARD_BG, minHeight: "480px" }}
           >
             <div className="text-lg w-full flex justify-between items-center text-rose-300 font-black tracking-widest z-10 shrink-0">
@@ -369,7 +384,7 @@ const App: React.FC = () => {
 
           {/* 私密装备卡片 */}
           <div
-            className="glass-card p-5 flex flex-col gap-4 overflow-hidden shadow-sm"
+            className="glass-card p-5 flex flex-col gap-4 overflow-visible shadow-sm"
             style={{ background: UI_DESIGN.CARD_BG }}
           >
             <h4 className="text-base font-black text-rose-300 uppercase tracking-widest flex items-center gap-2 border-b border-rose-100 pb-2">
@@ -387,19 +402,29 @@ const App: React.FC = () => {
                     {g.slots.map((s) => {
                       const v = _.get(data.gear, s.path);
                       const active = v && v !== "无" && v !== false;
+                      const displayName = active
+                        ? typeof v === "string"
+                          ? formatGearDisplayName(v)
+                          : "OK"
+                        : "-";
                       return (
                         <div
                           key={s.label}
-                          className={`px-2 py-1.5 rounded-lg border-2 text-sm flex justify-between items-center transition-all ${active ? "bg-white border-rose-200 text-rose-500 font-bold shadow-sm" : "bg-slate-50/40 border-slate-100 text-slate-300"}`}
+                          title={typeof v === "string" ? v : "无"}
+                          className={`group relative px-2 py-1.5 rounded-lg border-2 text-sm flex justify-between items-center transition-all ${active ? "bg-white border-rose-200 text-rose-500 font-bold shadow-sm cursor-help" : "bg-slate-50/40 border-slate-100 text-slate-300"}`}
                         >
                           <span className="truncate">{s.label}</span>
                           <span className="truncate opacity-70 ml-1">
-                            {active
-                              ? typeof v === "string"
-                                ? v.split("·").pop()
-                                : "OK"
-                              : "-"}
+                            {displayName}
                           </span>
+                          {active && typeof v === "string" && (
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-[100] pointer-events-none animate-fade-in">
+                              <div className="bg-rose-600 text-white text-sm px-2 py-1.5 rounded shadow-xl whitespace-nowrap border border-white/20 font-black">
+                                {v}
+                              </div>
+                              <div className="w-2 h-2 bg-rose-600 rotate-45 absolute -bottom-1 left-1/2 -translate-x-1/2 border-r border-b border-white/20"></div>
+                            </div>
+                          )}
                         </div>
                       );
                     })}
@@ -456,9 +481,20 @@ const App: React.FC = () => {
                       尾巴组件:
                     </span>
                     <span
-                      className={`text-sm font-bold ${data.gear.兽化组件.尾巴 ? "text-rose-500" : "text-slate-300"}`}
+                      className={`group relative text-sm font-bold truncate max-w-[80px] ${data.gear.兽化组件.尾巴 ? "text-rose-500 cursor-help" : "text-slate-300"}`}
+                      title={data.gear.兽化组件.尾巴 || "NONE"}
                     >
-                      {data.gear.兽化组件.尾巴 || "NONE"}
+                      {data.gear.兽化组件.尾巴
+                        ? formatGearDisplayName(data.gear.兽化组件.尾巴)
+                        : "NONE"}
+                      {data.gear.兽化组件.尾巴 && (
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-[100] pointer-events-none animate-fade-in">
+                          <div className="bg-rose-600 text-white text-sm px-2 py-1.5 rounded shadow-xl whitespace-nowrap border border-white/20 font-black">
+                            {data.gear.兽化组件.尾巴}
+                          </div>
+                          <div className="w-2 h-2 bg-rose-600 rotate-45 absolute -bottom-1 left-1/2 -translate-x-1/2 border-r border-b border-white/20"></div>
+                        </div>
+                      )}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
@@ -468,7 +504,7 @@ const App: React.FC = () => {
                     <span
                       className={`text-xs font-bold px-2 py-0.5 rounded-full ${data.gear.兽化组件.伪装延展 ? "bg-green-100 text-green-600" : "bg-slate-100 text-slate-300"}`}
                     >
-                      {data.gear.兽化组件.伪装延展 ? "ACTIVE" : "OFF"}
+                      {data.gear.兽化组件.伪装延展 ? "已延展" : "无"}
                     </span>
                   </div>
                 </div>
@@ -476,7 +512,7 @@ const App: React.FC = () => {
             </div>
 
             {/* 连接系统底栏 */}
-            <div className="bg-slate-900/5 rounded-xl border-t-2 border-rose-200 p-3 mt-1 shadow-inner">
+            <div className="bg-slate-900/5 rounded-xl border-t-2 border-rose-200 p-3 mt-1 shadow-inner overflow-visible">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-4">
                   <i className="fas fa-link text-rose-400 text-sm"></i>
@@ -486,9 +522,21 @@ const App: React.FC = () => {
                     </span>
                     <div className="flex gap-3">
                       <span
-                        className={`text-sm font-bold ${data.gear.连接系统.项圈 ? "text-rose-600" : "text-slate-300"}`}
+                        className={`group relative text-sm font-bold ${data.gear.连接系统.项圈 ? "text-rose-600 cursor-help" : "text-slate-300"}`}
+                        title={data.gear.连接系统.项圈 || "未佩戴"}
                       >
-                        项圈: {data.gear.连接系统.项圈 || "未佩戴"}
+                        项圈:{" "}
+                        {data.gear.连接系统.项圈
+                          ? formatGearDisplayName(data.gear.连接系统.项圈)
+                          : "未佩戴"}
+                        {data.gear.连接系统.项圈 && (
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-[100] pointer-events-none animate-fade-in">
+                            <div className="bg-rose-600 text-white text-sm px-2 py-1.5 rounded shadow-xl whitespace-nowrap border border-white/20 font-black">
+                              {data.gear.连接系统.项圈}
+                            </div>
+                            <div className="w-2 h-2 bg-rose-600 rotate-45 absolute -bottom-1 left-1/2 -translate-x-1/2 border-r border-b border-white/20"></div>
+                          </div>
+                        )}
                       </span>
                       <span
                         className={`text-sm font-bold ${data.gear.连接系统.全身锁链 ? "text-rose-600" : "text-slate-300"}`}
@@ -573,10 +621,10 @@ const App: React.FC = () => {
 
       <style>{`
         @keyframes fade-in {
-          from { opacity: 0; transform: translateY(10px); }
+          from { opacity: 0; transform: translateY(5px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fade-in { animation: fade-in 0.4s ease-out forwards; }
+        .animate-fade-in { animation: fade-in 0.2s ease-out forwards; }
         @keyframes spin-slow {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
