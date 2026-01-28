@@ -73,7 +73,12 @@ const App: React.FC = () => {
       setIncompatible(false);
     }
 
-    setMemData(Array.isArray(mem) ? mem : []);
+    // 将记忆列表按时间降序排列
+    const sortedMem = Array.isArray(mem)
+      ? [...mem].sort((a, b) => String(b.时间).localeCompare(String(a.时间)))
+      : [];
+    setMemData(sortedMem);
+
     setData({
       stats: {
         堕落度: _.get(ly, "状态.堕落度", 0),
