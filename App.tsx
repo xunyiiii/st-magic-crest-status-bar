@@ -131,10 +131,12 @@ const App: React.FC = () => {
 
   const corruptionInfo = useMemo(() => {
     if (!data) return CORRUPTION_LEVELS[0];
-    const val = data.stats.堕落度;
+
+    // 为了兼容 1000 的最大值且不改动常量，这里将值缩放到 100 进行判定
+    const val = data.stats.堕落度 / 10;
     return (
       CORRUPTION_LEVELS.find((l) => val >= l.min && val <= l.max) ||
-      CORRUPTION_LEVELS[0]
+      CORRUPTION_LEVELS[CORRUPTION_LEVELS.length - 1]
     );
   }, [data]);
 
@@ -202,47 +204,58 @@ const App: React.FC = () => {
                 {
                   label: "堕落度",
                   val: data.stats.堕落度,
+                  max: 1000,
                   color: "bg-purple-600",
                 },
                 {
                   label: "羞耻感",
                   val: data.stats.羞耻感,
+                  max: 100,
                   color: "bg-rose-500",
                 },
                 {
                   label: "敏感度",
                   val: data.stats.敏感度,
+                  max: 100,
                   color: "bg-pink-500",
                 },
                 {
                   label: "体力值",
                   val: data.stats.体力,
+                  max: 100,
                   color: "bg-emerald-500",
                 },
-              ].map((s) => (
-                <div key={s.label} className="flex flex-col gap-2 w-full">
-                  <div className="flex justify-between font-black text-slate-600 leading-none items-center px-1">
-                    <span className="flex items-center gap-1.5 truncate">
-                      {s.label}
-                    </span>
-                    <span className="font-mono">{Math.round(s.val)}%</span>
-                  </div>
-                  {/* 强制高度 10px */}
-                  <div
-                    className="track bg-slate-200/50 relative overflow-hidden"
-                    style={{
-                      height: "10px",
-                      minHeight: "10px",
-                      maxHeight: "10px",
-                    }}
-                  >
+              ].map((s) => {
+                const percent = Math.min(100, (s.val / s.max) * 100);
+                return (
+                  <div key={s.label} className="flex flex-col gap-2 w-full">
+                    <div className="flex justify-between font-black text-slate-600 leading-none items-center px-1">
+                      <span className="flex items-center gap-1.5 truncate">
+                        {s.label}
+                      </span>
+                      <span className="font-mono">
+                        {s.label === "堕落度"
+                          ? `${Math.round(s.val)}/1000`
+                          : `${Math.round(s.val)}%`}
+                      </span>
+                    </div>
+                    {/* 强制高度 10px */}
                     <div
-                      className={`fill ${s.color} absolute left-0 top-0 shadow-inner`}
-                      style={{ width: `${s.val}%`, height: "10px" }}
-                    />
+                      className="track bg-slate-200/50 relative overflow-hidden"
+                      style={{
+                        height: "10px",
+                        minHeight: "10px",
+                        maxHeight: "10px",
+                      }}
+                    >
+                      <div
+                        className={`fill ${s.color} absolute left-0 top-0 shadow-inner`}
+                        style={{ width: `${percent}%`, height: "10px" }}
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* 环境区域 - 铺满一行 */}
