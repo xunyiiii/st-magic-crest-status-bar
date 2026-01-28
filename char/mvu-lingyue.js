@@ -86,24 +86,19 @@ export const Schema = z.object({
       刺激模组: z.object({
         部署位置: z
           .array(
-            // 数组单个元素的结构定义
-            z
-              .object({
-                点位: z
-                  .string()
-                  .describe(
-                    "锚点装备/身体部位名称（如阴蒂环、乳环、宫颈塞·月之泪、阴蒂、乳头、G点、肛门、阴道穹窿）",
-                  ),
-                震动: z.boolean().describe("是否处于震动中").default(false),
-              })
-              .transform((arr) => {
-                // 去除空元素，保持数组整洁（可选，防止删除后残留空对象）
-                return arr.filter(
-                  (item) => item.点位 && item.点位.trim() !== "",
-                );
-              })
-              .prefault(() => []),
+            z.object({
+              点位: z
+                .string()
+                .describe(
+                  "锚点装备/身体部位名称（如阴蒂环、乳环、宫颈塞·月之泪、阴蒂、乳头、G点、肛门、阴道穹窿）",
+                ),
+              震动: z.boolean().describe("是否处于震动中").default(false),
+            }),
           )
+          .transform((arr) => {
+            // 去除空元素，保持数组整洁（可选，防止删除后残留空对象）
+            return arr.filter((item) => item.点位 && item.点位.trim() !== "");
+          })
           .prefault(() => []),
         控制模式: z
           .enum(["待机", "随机游走", "声控惩罚", "心跳同频"])

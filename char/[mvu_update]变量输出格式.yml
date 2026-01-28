@@ -9,11 +9,15 @@
         - remove
         - move
     - don't update field names starts with `_` as they are readonly, such as `_变量`
-    # 新增约束1：JSON 必须合法，严格使用双引号，布尔值不加引号
     - the JSON Patch array must be valid JSON, use double quotes only, and do not add quotes to boolean values (true/false)
-    # 优化后的约束2：区分「记忆」和「部署位置」的允许操作，明确格式
     - for "记忆" variable: only use "insert" operation with path ending with "-" (e.g. "/记忆/-") for appending new memories.
-    - for "部署位置" variable: use "insert" operation with path ending with "-" (e.g. "/部署位置/-") for appending new positions, and use "remove" operation (e.g. "/部署位置/0") for deleting existing positions (array index starts from 0).
+    - for "部署位置" variable: use "insert" operation with path ending with "-" (e.g. "/凌月/装备/刺激模组/部署位置/-") for appending new positions, and use "remove" operation (e.g. "/凌月/装备/刺激模组/部署位置/0") for deleting existing positions (array index starts from 0).
+    - >
+      When "星尘蜂群" or "跳蛋" is mentioned, you MUST ONLY update the "部署位置" array variable using the "insert" operation with path ending with "-" (i.e. "/凌月/装备/刺激模组/部署位置/-"). NO OTHER variables or paths are allowed to be updated with "星尘蜂群" or "跳蛋" related content
+    - >
+      STRICTLY FORBID any update operations (replace, insert, remove, move) on the stardust equipment path "/凌月/装备/刺激模组/部署位置" for any reason. Also, forbid stardust-related content from appearing in normal equipment paths (e.g. "/凌月/装备/体内", "/凌月/装备/穿刺", "/凌月/装备/连接系统", "/凌月/装备/公开展示",  "/凌月/装备/兽化组件"). Normal updates to these normal equipment paths (e.g. "[肛塞·纯净之泪]", "[脐钉·枢纽之心]") are allowed
+    - >
+      For "星尘蜂群" or "跳蛋", the only valid output format is { "op": "insert", "path": "/凌月/装备/刺激模组/部署位置/-", "value": { "点位": "锚点装备/身体部位名称(如阴蒂环、乳环、宫颈塞·月之泪、阴蒂、乳头、G点、肛门、阴道穹窿等)", "震动": true/false } }. Any other formats related to stardust are illegal
   format: |-
     <UpdateVariable>
     <Analysis>$(IN ENGLISH, no more than 80 words)
@@ -28,8 +32,15 @@
       { "op": "insert", "path": "${/path/to/object/new_key}", "value": "${new_value}" },
       { "op": "insert", "path": "${/path/to/array/-}", "value": "${new_value}" },
       # 以下是「记忆」和「部署位置」的具体正确示例（强制 AI 参考此格式输出）
+
+      # 示例1：普通装备路径合法更新（无星尘蜂群）
+      { "op": "replace", "path": "/凌月/装备/体内/肛门", "value": "肛塞·纯净之泪" },
+      { "op": "replace", "path": "/凌月/装备/穿刺/肚脐", "value": "脐钉·枢纽之心" },
+      # 示例2：星尘蜂群相关唯一合法格式（部署位置数组 insert）
+      { "op": "insert", "path": "/凌月/装备/刺激模组/部署位置/-", "value": { "点位": "肛塞·纯净之泪", "震动": true } },
+      { "op": "insert", "path": "/凌月/装备/刺激模组/部署位置/-", "value": { "点位": "阴道穹窿", "震动": true } },
       { "op": "insert", "path": "/记忆/-", "value": { "名称": "事件名称", "内容": "事件详细描述", "时间": "YYYY年MM月DD日 HH:MM" } },
-      { "op": "insert", "path": "/部署位置/-", "value": { "点位": "锚点装备/身体部位名称", "震动": true/false } },
+      { "op": "remove", "path": "/凌月/装备/刺激模组/部署位置/0" },
       { "op": "remove", "path": "${/path/to/object/key}" },
       { "op": "remove", "path": "${/path/to/array/0}" },
       { "op": "move", "from": "${/path/to/variable}", "to": "${/path/to/another/path}" },
