@@ -12,7 +12,7 @@ export const Schema = z.object({
     状态: z.object({
       堕落度: z.coerce
         .number()
-        .transform((v) => _.clamp(v, 0, 100))
+        .transform((v) => _.clamp(v, 0, 1100))
         .prefault(0)
         .describe("决定演变阶段的关键变量"),
       羞耻感: z.coerce

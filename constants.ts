@@ -8,11 +8,11 @@ export const CREST_LEVEL_COLORS: Record<number, string> = {
 };
 
 export const CORRUPTION_LEVELS = [
-  { min: 0, max: 20, label: "尊严囚笼" },
-  { min: 21, max: 40, label: "认知失调" },
-  { min: 41, max: 60, label: "背德窃喜" },
-  { min: 61, max: 80, label: "献祭渴望" },
-  { min: 81, max: 100, label: "完美祭品" },
+  { min: 0, max: 200, label: "尊严囚笼" },
+  { min: 201, max: 400, label: "认知失调" },
+  { min: 401, max: 600, label: "背德窃喜" },
+  { min: 601, max: 800, label: "献祭渴望" },
+  { min: 801, max: 1100, label: "完美祭品" },
 ];
 
 /**
