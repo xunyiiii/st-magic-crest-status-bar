@@ -452,85 +452,78 @@ const App: React.FC = () => {
             </div>
 
             {/* 模块扩展区 */}
-            <div className="grid grid-cols-2 gap-4 mt-2">
-              <div className="bg-white/60 p-3 rounded-xl border border-rose-100 shadow-sm">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-black text-slate-500 uppercase">
-                    <i className="fas fa-bolt mr-1"></i>刺激模组
-                  </span>
-                  <span className="text-xs font-bold text-rose-500 bg-rose-50 px-2 py-0.5 rounded border border-rose-100">
-                    {data.gear.刺激模组.控制模式}
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {/* 处理部署位置数组 */}
-                  {Array.isArray(data.gear.刺激模组.部署位置) &&
-                  data.gear.刺激模组.部署位置.length > 0 ? (
-                    (data.gear.刺激模组.部署位置 as DeploymentLocation[]).map(
-                      (item, idx) => (
-                        <span
-                          key={idx}
-                          className={`bg-rose-100 text-rose-600 px-2 py-0.5 rounded-md text-xs font-black border border-rose-200 flex items-center gap-1 ${item.震动 ? "animate-pulse" : ""}`}
-                        >
-                          {item.点位}{" "}
-                          {item.震动 ? (
-                            <i className="fas fa-bolt text-xs"></i>
-                          ) : (
-                            ""
-                          )}
-                        </span>
-                      ),
-                    )
-                  ) : (
-                    <span className="text-slate-300 text-xs">未佩戴</span>
-                  )}
-                </div>
+            <div className="bg-white/60 p-5 rounded-xl border border-rose-100 shadow-sm mt-2 min-h-[115px]">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-black text-slate-500 uppercase">
+                  <i className="fas fa-bolt mr-1"></i>刺激模组
+                </span>
+                <span className="text-xs font-bold text-rose-500 bg-rose-50 px-2 py-0.5 rounded border border-rose-100">
+                  {data.gear.刺激模组.控制模式}
+                </span>
               </div>
+              <div className="flex flex-wrap gap-2">
+                {/* 处理部署位置数组 */}
+                {Array.isArray(data.gear.刺激模组.部署位置) &&
+                data.gear.刺激模组.部署位置.length > 0 ? (
+                  (data.gear.刺激模组.部署位置 as DeploymentLocation[]).map(
+                    (item, idx) => (
+                      <span
+                        key={idx}
+                        className={`bg-rose-100 text-rose-600 px-2 py-0.5 rounded-md text-xs font-black border border-rose-200 flex items-center gap-1 ${item.震动 ? "animate-pulse" : ""}`}
+                      >
+                        {item.点位}{" "}
+                        {item.震动 ? (
+                          <i className="fas fa-bolt text-xs"></i>
+                        ) : (
+                          ""
+                        )}
+                      </span>
+                    ),
+                  )
+                ) : (
+                  <span className="text-slate-300 text-xs">未佩戴</span>
+                )}
+              </div>
+            </div>
 
-              <div className="bg-white/60 p-3 rounded-xl border border-rose-100 shadow-sm flex flex-col justify-between">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-black text-slate-500 uppercase">
-                    <i className="fas fa-paw mr-1"></i>兽化组件
+            <div className="bg-white/60 px-3 py-2 rounded-xl border border-rose-100 shadow-sm flex items-center justify-between mt-2 overflow-visible">
+              <span className="text-sm font-black text-slate-500 uppercase flex items-center shrink-0">
+                <i className="fas fa-paw mr-1"></i>兽化组件
+              </span>
+              <div className="flex items-center gap-4 ml-4 flex-1 justify-end">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <span className="text-sm text-slate-400 font-black shrink-0">
+                    尾巴:
+                  </span>
+                  <span className="group relative text-sm font-bold text-rose-500 cursor-help truncate max-w-[120px]">
+                    {data.gear.兽化组件.尾巴
+                      ? formatGearDisplayName(data.gear.兽化组件.尾巴)
+                      : "NONE"}
+                    {data.gear.兽化组件.尾巴 && (
+                      <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block z-[100] pointer-events-none animate-fade-in">
+                        <div className="bg-rose-600 text-white text-sm px-2 py-1.5 rounded shadow-xl whitespace-nowrap border border-white/20 font-black">
+                          {data.gear.兽化组件.尾巴}
+                        </div>
+                        <div className="w-2 h-2 bg-rose-600 rotate-45 absolute -bottom-1 right-2 border-r border-b border-white/20"></div>
+                      </div>
+                    )}
                   </span>
                 </div>
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-slate-400 font-black">
-                      尾巴组件:
-                    </span>
-                    <span
-                      className={`group relative text-sm font-bold truncate max-w-[80px] ${data.gear.兽化组件.尾巴 ? "text-rose-500 cursor-help" : "text-slate-300"}`}
-                      title={data.gear.兽化组件.尾巴 || "NONE"}
-                    >
-                      {data.gear.兽化组件.尾巴
-                        ? formatGearDisplayName(data.gear.兽化组件.尾巴)
-                        : "NONE"}
-                      {data.gear.兽化组件.尾巴 && (
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-[100] pointer-events-none animate-fade-in">
-                          <div className="bg-rose-600 text-white text-sm px-2 py-1.5 rounded shadow-xl whitespace-nowrap border border-white/20 font-black">
-                            {data.gear.兽化组件.尾巴}
-                          </div>
-                          <div className="w-2 h-2 bg-rose-600 rotate-45 absolute -bottom-1 left-1/2 -translate-x-1/2 border-r border-b border-white/20"></div>
-                        </div>
-                      )}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-slate-400 font-black">
-                      伪装延展:
-                    </span>
-                    <span
-                      className={`text-xs font-bold px-2 py-0.5 rounded-full ${data.gear.兽化组件.伪装延展 ? "bg-green-100 text-green-600" : "bg-slate-100 text-slate-300"}`}
-                    >
-                      {data.gear.兽化组件.伪装延展 ? "已延展" : "无"}
-                    </span>
-                  </div>
+                <div className="flex items-center gap-2 border-l border-rose-100 pl-4 shrink-0">
+                  <span className="text-sm text-slate-400 font-black">
+                    延展:
+                  </span>
+                  <span
+                    className={`text-sm font-bold px-2 py-0.5 rounded-full ${data.gear.兽化组件.伪装延展 ? "bg-green-100 text-green-600" : "bg-slate-100 text-slate-300"}`}
+                  >
+                    {data.gear.兽化组件.伪装延展 ? "是" : "无"}
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* 连接系统底栏 */}
-            <div className="bg-slate-900/5 rounded-xl border-t-2 border-rose-200 p-3 mt-1 shadow-inner overflow-visible">
+            <div className="bg-slate-900/5 rounded-xl border-t-2 border-rose-200 p-3 mt-2 shadow-inner overflow-visible">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-4">
                   <i className="fas fa-link text-rose-400 text-sm"></i>
