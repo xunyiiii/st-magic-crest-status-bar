@@ -1,10 +1,41 @@
+// export const CREST_LEVEL_COLORS: Record<number, string> = {
+//   0: "#94a3b8", // 未烙印
+//   1: "#ffb3c1", // Lv.1
+//   2: "#ff85a1", // Lv.2
+//   3: "#ff4d6d", // Lv.3
+//   4: "#c9184a", // Lv.4
+//   5: "#a4133c", // Lv.5
+// };
+
+/**
+ * 【颜色配置】：纹身基础色 (Base Colors)
+ * 定义了 0-5 级进化的核心色调。
+ * 0: 灰色（未激活/石化感）
+ * 1-2: 浅粉/粉红（初生/羞涩萌芽）
+ * 3: 正红（觉醒/欲望燃烧）
+ * 4-5: 深红/暗红（堕落/终极祭品）
+ */
 export const CREST_LEVEL_COLORS: Record<number, string> = {
   0: "#94a3b8", // 未烙印
-  1: "#ffb3c1", // Lv.1
-  2: "#ff85a1", // Lv.2
-  3: "#ff4d6d", // Lv.3
-  4: "#c9184a", // Lv.4
-  5: "#a4133c", // Lv.5
+  1: "#fdb4c2", // Lv.1
+  2: "#fe96ac", // Lv.2
+  3: "#fd81a7", // Lv.3
+  4: "#ff709b", // Lv.4
+  5: "#fb5087", // Lv.5
+};
+
+/**
+ * 【高亮配置】：等级专属能量高亮色 (Highlight/Energy Colors)
+ * 用于“满溢”和“绽放”状态下的核心填充。
+ * 较高的等级会带有偏橙、偏金或极高饱和度的色彩，以体现能量密度。
+ */
+export const CREST_HIGHLIGHT_COLORS: Record<number, string> = {
+  0: "#cbd5e1", // 基础灰白
+  1: "#fdb4c2", // Lv.1
+  2: "#fe96ac", // Lv.2
+  3: "#fd81a7", // Lv.3
+  4: "#ff709b", // Lv.4
+  5: "#fb5087", // Lv.5
 };
 
 export const CORRUPTION_LEVELS = [
@@ -59,6 +90,13 @@ export const UI_DESIGN = {
   LARGE_FONT_SIZE: "16px",
 };
 
+/**
+ * 【动画速率配置】：
+ * BREATH: 基础呼吸感，控制整体透明度和光晕起伏。
+ * CHARGE: 能量灌注感，流光线较平缓。
+ * OVERFLOW: 满溢感，流光线速度加倍，带有急促感。
+ * BLOOM: 绽放感，极高频率闪烁与光流，体现临界态。
+ */
 export const ANIMATION_CONFIG = {
   BREATH_SPEED: "3.5s",
   CHARGE_SPEED: "2s",

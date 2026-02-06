@@ -30,7 +30,7 @@
       /* 能量线流动动画 */
       @keyframes flow-dash {
         from {
-          stroke-dashoffset: 4000;
+          stroke-dashoffset: 8000;
         }
         to {
           stroke-dashoffset: 0;
@@ -50,24 +50,39 @@
         }
       }
 
+      @keyframes flicker-white {
+        0%,
+        100% {
+          opacity: 1;
+          filter: brightness(3.5);
+        }
+        50% {
+          opacity: 0.2;
+          filter: brightness(1.2);
+        }
+      }
+
       /* 【配置说明】：此处调整“呼吸频率” (当前 3.5s) */
       .animate-pulse-glow {
-        animation: pulse-glow 3s ease-in-out infinite;
+        animation: pulse-glow 3.5s ease-in-out infinite;
         transform-origin: center center;
       }
 
       /* 【配置说明】：此处调整“纹身光线流转速度” (当前分别为 4s, 2s, 0.8s) */
       .animate-flow-charging {
-        animation: flow-dash 4s linear infinite;
+        animation: flow-dash 3.8s linear infinite;
       }
       .animate-flow-overflow {
-        animation: flow-dash 2s linear infinite;
+        animation: flow-dash 1.9s linear infinite;
       }
       .animate-flow-bloom {
-        animation: flow-dash 0.8s linear infinite;
+        animation: flow-dash 0.7s linear infinite;
       }
       .animate-energy-flicker {
         animation: energy-flicker 0.4s ease-in-out infinite;
+      }
+      .animate-flicker-white {
+        animation: flicker-white 0.3s ease-in-out infinite;
       }
 
       body {

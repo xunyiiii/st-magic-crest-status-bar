@@ -1,5 +1,9 @@
 import React from "react";
-import { CREST_LEVEL_COLORS, SVG_PATHS } from "../constants";
+import {
+  CREST_HIGHLIGHT_COLORS,
+  CREST_LEVEL_COLORS,
+  SVG_PATHS,
+} from "../constants";
 import { ActivityState } from "../types";
 
 interface MagicCrestProps {
@@ -14,16 +18,23 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
   isBranded,
 }) => {
   /**
-   * 根据进化等级获取 5 种等级的基础状态颜色
+   * 【色彩获取逻辑】
+   * baseColor: 纹身的基础轮廓色，Lv.0 为灰色，其他等级使用渐进红色系。
+   * highlightColor: 能量激发时的填充色。重构后根据进化等级精确匹配，不再混用基础色。
    */
-  const getCrestStageColors = (lvl: number): string => {
-    return CREST_LEVEL_COLORS[lvl] || CREST_LEVEL_COLORS[1];
-  };
-
   const baseColor = isBranded
-    ? getCrestStageColors(level)
+    ? CREST_LEVEL_COLORS[level] || CREST_LEVEL_COLORS[1]
     : CREST_LEVEL_COLORS[0];
+  const highlightColor = isBranded
+    ? CREST_HIGHLIGHT_COLORS[level] || CREST_HIGHLIGHT_COLORS[1]
+    : CREST_HIGHLIGHT_COLORS[0];
 
+  /**
+   * 【光晕(Glow)计算】
+   * 采用 drop-shadow 实现。
+   * 随着活性(activity)提升，光晕的扩展半径和扩散层数逐渐增加。
+   * 绽放(Bloom)态会额外叠加白色光晕以增强视觉冲击力。
+   */
   const getGlowStyle = () => {
     const style: React.CSSProperties = {
       "--glow-color": baseColor,
@@ -51,7 +62,7 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
         style.filter = `drop-shadow(0 0 18px ${baseColor}) drop-shadow(0 0 35px ${baseColor})`;
         break;
       case "绽放":
-        style.filter = `drop-shadow(0 0 25px white) drop-shadow(0 0 50px ${baseColor})`;
+        style.filter = `drop-shadow(0 0 25px ${baseColor}) drop-shadow(0 0 50px ${baseColor})`;
         break;
       case "常态":
       default:
@@ -65,6 +76,7 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
     isBranded &&
     (activity === "充能" || activity === "满溢" || activity === "绽放");
   const isBloom = isBranded && activity === "绽放";
+  const isHighEnergy = activity === "满溢" || activity === "绽放";
 
   return (
     <div className="w-full h-full flex items-center justify-center pointer-events-none">
@@ -81,12 +93,22 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
             <stop offset="90%" stopColor="white" stopOpacity="1" />
             <stop offset="100%" stopColor="white" stopOpacity="1" />
           </linearGradient>
+          {/* 【修订项】：新增边缘柔化滤镜，用于实现能量核心与边框的平滑衔接 */}
+          <filter
+            id="soft-energy-blur"
+            x="-20%"
+            y="-20%"
+            width="140%"
+            height="140%"
+          >
+            <feGaussianBlur in="SourceGraphic" stdDeviation="30" />
+          </filter>
         </defs>
 
         {/* 【配置说明】：此处调整“纹身显示尺寸” (修改 scale 的值，缩小以容纳光晕) 
             由原来的 scale(0.1, -0.1) 调整为 scale(0.08, -0.08)，并配合 translate 居中 */}
         <g transform="translate(50, 335) scale(0.08, -0.08)">
-          {/* 背景阴影层 */}
+          {/* 1. 背景阴影层：提供深度感 */}
           {SVG_PATHS.map((d, i) => (
             <path
               key={`shadow-${i}`}
@@ -95,7 +117,8 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
               transform="translate(10, -10)"
             />
           ))}
-          {/* 填充层 */}
+
+          {/* 2. 基础填充层：纹身的基本色块 */}
           {SVG_PATHS.map((d, i) => (
             <path
               key={`fill-${i}`}
@@ -104,7 +127,33 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
               fillOpacity={isBranded ? 0.35 : 0.15}
             />
           ))}
-          {/* 描边层 */}
+
+          {/* 3. 【修订项】高亮填充层 (Energy Core) 
+              使用 filter="url(#soft-energy-blur)" 使边缘产生向外扩散的虚化感。
+              这种虚化会使填充色在视觉上“漫反射”到边框内壁，消除生硬的边界感。
+          */}
+          {isHighEnergy &&
+            SVG_PATHS.map((d, i) => (
+              <React.Fragment key={`energy-wrap-${i}`}>
+                <path
+                  d={d}
+                  fill={highlightColor}
+                  fillOpacity={0.2}
+                  filter="url(#soft-energy-blur)"
+                  className={`transition-opacity duration-500 ${isBloom ? "animate-energy-flicker" : ""}`}
+                />
+                <path
+                  d={d}
+                  fill="#ffffff"
+                  fillOpacity={isBloom ? 0.9 : 0.9}
+                  filter="url(#soft-energy-blur)"
+                  className={`transition-opacity duration-500 ${isBloom ? "animate-flicker-white" : ""}`}
+                  style={{ mixBlendMode: "plus-lighter" }}
+                />
+              </React.Fragment>
+            ))}
+
+          {/* 4. 描边层：主轮廓线，由于在填充层之后渲染，其内部宽度会创造填充边距 */}
           {SVG_PATHS.map((d, i) => (
             <path
               key={`stroke-${i}`}
@@ -115,7 +164,8 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
               strokeLinejoin="round"
             />
           ))}
-          {/* 能量流动线 */}
+
+          {/* 5. 能量流动线 (Flowing Dash)：高能态下流转的白光 */}
           {showFlowingLines &&
             SVG_PATHS.map((d, i) => (
               <path
@@ -125,7 +175,8 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
                 stroke="url(#glow-grad)"
                 strokeWidth="25"
                 /* 【配置说明】：此处调整“流光拖尾长度” (strokeDasharray 的第一个参数是流光长度，第二个是间距) */
-                strokeDasharray="900 3000"
+                strokeDasharray="900 3200"
+                strokeDashoffset="3500"
                 className={
                   activity === "绽放"
                     ? "animate-flow-bloom"
@@ -136,7 +187,8 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
                 style={{ strokeLinecap: "round" }}
               />
             ))}
-          {/* 核心光点勾勒 */}
+
+          {/* 6. 核心光点勾勒 (Inner Core)：最精细的白色极细边缘，增强质感 */}
           {SVG_PATHS.map((d, i) => (
             <path
               key={`core-${i}`}
