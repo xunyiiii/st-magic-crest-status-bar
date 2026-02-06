@@ -132,8 +132,7 @@ const App: React.FC = () => {
   const corruptionInfo = useMemo(() => {
     if (!data) return CORRUPTION_LEVELS[0];
 
-    // 为了兼容 1000 的最大值且不改动常量，这里将值缩放到 100 进行判定
-    const val = data.stats.堕落度 / 10;
+    const val = data.stats.堕落度;
     return (
       CORRUPTION_LEVELS.find((l) => val >= l.min && val <= l.max) ||
       CORRUPTION_LEVELS[CORRUPTION_LEVELS.length - 1]
