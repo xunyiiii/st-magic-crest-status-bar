@@ -21,7 +21,7 @@ export const CREST_LEVEL_COLORS: Record<number, string> = {
   2: "#fe96ac", // Lv.2
   3: "#fd81a7", // Lv.3
   4: "#ff709b", // Lv.4
-  5: "#fb5087", // Lv.5
+  5: "#f92f76", // Lv.5
 };
 
 /**
@@ -35,7 +35,7 @@ export const CREST_HIGHLIGHT_COLORS: Record<number, string> = {
   2: "#fe96ac", // Lv.2
   3: "#fd81a7", // Lv.3
   4: "#ff709b", // Lv.4
-  5: "#fb5087", // Lv.5
+  5: "#f92f76", // Lv.5
 };
 
 export const CORRUPTION_LEVELS = [
