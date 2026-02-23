@@ -109,9 +109,8 @@ export const Schema = z.object({
       连接系统: z.object({
         项圈: z.string().nullable().prefault(null),
         全身锁链: z
-          .string()
-          .nullable()
-          .prefault(null)
+          .boolean()
+          .default(false)
           .describe("圣洁锁链系统是否完全闭合连接"),
         运作模式: z
           .enum(["待机", "快感路由", "警告与剥夺", "随机传导", "铃声陷阱"])
@@ -225,8 +224,12 @@ export const Schema = z.object({
         .map((group) => _.last(group)) // 每组保留最后一条（最新添加的）
         .value();
       return _(uniqueArr)
-        .sortBy((item) => item.时间)
-        .takeRight(20)
+        .orderBy(
+          (item) =>
+            new Date(item.时间.replace(/年|月/g, "/").replace("日 ", " ")),
+          ["desc"],
+        )
+        .take(20)
         .value();
     })
     .prefault(() => []),

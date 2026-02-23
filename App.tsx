@@ -75,7 +75,16 @@ const App: React.FC = () => {
 
     // 将记忆列表按时间降序排列
     const sortedMem = Array.isArray(mem)
-      ? [...mem].sort((a, b) => String(b.时间).localeCompare(String(a.时间)))
+      ? [...mem].sort((a, b) => {
+          // 第一步：将「YYYY年MM月DD日 HH:MM」转为可解析的日期字符串（YYYY/MM/DD HH:MM）
+          const formatTime = (timeStr) => {
+            if (!timeStr) return new Date(0); // 处理空时间的兜底
+            return new Date(timeStr.replace(/年|月/g, "/").replace("日 ", " "));
+          };
+
+          // 第二步：比较时间戳实现降序（b时间 - a时间，大的在前）
+          return formatTime(b.时间).getTime() - formatTime(a.时间).getTime();
+        })
       : [];
     setMemData(sortedMem);
 
