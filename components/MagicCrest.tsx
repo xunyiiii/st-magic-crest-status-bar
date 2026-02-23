@@ -89,7 +89,7 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
       >
         <defs>
           <linearGradient id="glow-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="white" stopOpacity="0" />
+            <stop offset="0%" stopColor="white" stopOpacity="1" />
             <stop offset="90%" stopColor="white" stopOpacity="1" />
             <stop offset="100%" stopColor="white" stopOpacity="1" />
           </linearGradient>
@@ -175,8 +175,7 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
                 stroke="url(#glow-grad)"
                 strokeWidth="25"
                 /* 【配置说明】：此处调整“流光拖尾长度” (strokeDasharray 的第一个参数是流光长度，第二个是间距) */
-                strokeDasharray="900 3200"
-                strokeDashoffset="3500"
+                strokeDasharray="1000 500"
                 className={
                   activity === "绽放"
                     ? "animate-flow-bloom"
