@@ -17,7 +17,7 @@
     - >
       STRICTLY FORBID any update operations (replace, insert, remove, move) on the stardust equipment path "/凌月/装备/刺激模组/部署位置" for any reason. Also, forbid stardust-related content from appearing in normal equipment paths (e.g. "/凌月/装备/体内", "/凌月/装备/穿刺", "/凌月/装备/连接系统", "/凌月/装备/公开展示",  "/凌月/装备/兽化组件"). Normal updates to these normal equipment paths (e.g. "[肛塞·纯净之泪]", "[脐钉·枢纽之心]") are allowed
     - >
-      For "星尘蜂群" or "跳蛋", the only valid output format is { "op": "insert", "path": "/凌月/装备/刺激模组/部署位置/-", "value": { "点位": "锚点装备/身体部位名称(如阴蒂环、乳环、宫颈塞·月之泪、阴蒂、乳头、G点、肛门、阴道穹窿等)", "震动": true/false } }. Any other formats related to stardust are illegal
+      For "星尘蜂群" or "跳蛋", the only valid output format is { "op": "insert", "path": "/凌月/装备/刺激模组/部署位置/-", "value": { "点位": "锚点装备/身体部位名称(如阴蒂环、乳环、[宫颈塞·月之泪]、阴蒂、乳头、G点、肛门、阴道穹窿等)", "震动": true/false } }. Any other formats related to stardust are illegal
   format: |-
     <UpdateVariable>
     <Analysis>$(IN ENGLISH, no more than 80 words)
@@ -34,10 +34,12 @@
       # 以下是「记忆」和「部署位置」的具体正确示例（强制 AI 参考此格式输出）
 
       # 示例1：普通装备路径合法更新（无星尘蜂群）
-      { "op": "replace", "path": "/凌月/装备/体内/肛门", "value": "肛塞·纯净之泪" },
-      { "op": "replace", "path": "/凌月/装备/穿刺/肚脐", "value": "脐钉·枢纽之心" },
+      { "op": "replace", "path": "/凌月/装备/体内/肛门", "value": "[肛塞·纯净之泪]" },
+      { "op": "replace", "path": "/凌月/装备/穿刺/肚脐", "value": "[脐钉·枢纽之心]" },
+      { "op": "replace", "path": "/凌月/装备/穿刺/阴蒂", "value": "[阴蒂环·潮汐之心]" },
+      { "op": "replace", "path": "/凌月/装备/穿刺/阴蒂", "value": "[阴蒂扣·花间蜜语]" },
       # 示例2：星尘蜂群相关唯一合法格式（部署位置数组 insert）
-      { "op": "insert", "path": "/凌月/装备/刺激模组/部署位置/-", "value": { "点位": "肛塞·纯净之泪", "震动": true } },
+      { "op": "insert", "path": "/凌月/装备/刺激模组/部署位置/-", "value": { "点位": "[肛塞·纯净之泪]", "震动": true } },
       { "op": "insert", "path": "/凌月/装备/刺激模组/部署位置/-", "value": { "点位": "阴道穹窿", "震动": true } },
       { "op": "insert", "path": "/记忆/-", "value": { "名称": "事件名称", "内容": "事件详细描述", "时间": "YYYY年MM月DD日 HH:MM" } },
       { "op": "remove", "path": "/凌月/装备/刺激模组/部署位置/0" },
