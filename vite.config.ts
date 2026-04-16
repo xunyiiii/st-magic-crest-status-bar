@@ -38,7 +38,7 @@ export default defineConfig(({ mode }) => {
           // 禁用代码拆分（单文件打包已配置，此处强化）
           format: "iife",
           // 保留注释（可选）
-          preserveComments: "all",
+          preserveComments: "false",
         },
       },
     },

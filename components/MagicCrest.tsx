@@ -19,8 +19,6 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
 }) => {
   /**
    * 【色彩获取逻辑】
-   * baseColor: 纹身的基础轮廓色，Lv.0 为灰色，其他等级使用渐进红色系。
-   * highlightColor: 能量激发时的填充色。重构后根据进化等级精确匹配，不再混用基础色。
    */
   const baseColor = isBranded
     ? CREST_LEVEL_COLORS[level] || CREST_LEVEL_COLORS[1]
@@ -31,9 +29,6 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
 
   /**
    * 【光晕(Glow)计算】
-   * 采用 drop-shadow 实现。
-   * 随着活性(activity)提升，光晕的扩展半径和扩散层数逐渐增加。
-   * 绽放(Bloom)态会额外叠加白色光晕以增强视觉冲击力。
    */
   const getGlowStyle = () => {
     const style: React.CSSProperties = {
@@ -46,7 +41,6 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
       return style;
     }
 
-    /* 【配置说明】：此处调整“光晕尺寸” (drop-shadow 的第三个参数) */
     switch (activity) {
       case "沉寂":
         style.filter = `drop-shadow(0 0 4px ${baseColor})`;
@@ -81,19 +75,22 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
   return (
     <div className="w-full h-full flex items-center justify-center pointer-events-none">
       <svg
-        className={`w-full h-full max-h-[320px] overflow-visible ${isBranded && activity === "呼吸" ? "animate-pulse-glow" : ""}`}
+        className={`w-full h-full overflow-visible ${isBranded && activity === "呼吸" ? "animate-pulse-glow" : ""}`}
         style={getGlowStyle()}
         viewBox="0 0 512 366"
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="xMidYMid meet"
       >
         <defs>
-          <linearGradient id="glow-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+          {/* 【修订项】：流光渐变优化。
+              将 stopOpacity 统一设为 1.0，确保流光线走到路径最末端的坐标点时依然清晰可见，不产生渐隐。
+          */}
+          <linearGradient id="glow-grad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="white" stopOpacity="1" />
-            <stop offset="90%" stopColor="white" stopOpacity="1" />
+            <stop offset="50%" stopColor="white" stopOpacity="1" />
             <stop offset="100%" stopColor="white" stopOpacity="1" />
           </linearGradient>
-          {/* 【修订项】：新增边缘柔化滤镜，用于实现能量核心与边框的平滑衔接 */}
+
           <filter
             id="soft-energy-blur"
             x="-20%"
@@ -105,10 +102,8 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
           </filter>
         </defs>
 
-        {/* 【配置说明】：此处调整“纹身显示尺寸” (修改 scale 的值，缩小以容纳光晕) 
-            由原来的 scale(0.1, -0.1) 调整为 scale(0.08, -0.08)，并配合 translate 居中 */}
         <g transform="translate(50, 335) scale(0.08, -0.08)">
-          {/* 1. 背景阴影层：提供深度感 */}
+          {/* 1. 背景阴影层 */}
           {SVG_PATHS.map((d, i) => (
             <path
               key={`shadow-${i}`}
@@ -118,7 +113,7 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
             />
           ))}
 
-          {/* 2. 基础填充层：纹身的基本色块 */}
+          {/* 2. 基础填充层 */}
           {SVG_PATHS.map((d, i) => (
             <path
               key={`fill-${i}`}
@@ -128,10 +123,7 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
             />
           ))}
 
-          {/* 3. 【修订项】高亮填充层 (Energy Core) 
-              使用 filter="url(#soft-energy-blur)" 使边缘产生向外扩散的虚化感。
-              这种虚化会使填充色在视觉上“漫反射”到边框内壁，消除生硬的边界感。
-          */}
+          {/* 3. 高亮填充层 (Energy Core) */}
           {isHighEnergy &&
             SVG_PATHS.map((d, i) => (
               <React.Fragment key={`energy-wrap-${i}`}>
@@ -153,7 +145,7 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
               </React.Fragment>
             ))}
 
-          {/* 4. 描边层：主轮廓线，由于在填充层之后渲染，其内部宽度会创造填充边距 */}
+          {/* 4. 描边层 */}
           {SVG_PATHS.map((d, i) => (
             <path
               key={`stroke-${i}`}
@@ -165,7 +157,13 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
             />
           ))}
 
-          {/* 5. 能量流动线 (Flowing Dash)：高能态下流转的白光 */}
+          {/* 5. 能量流动线 (Flowing Dash)
+              【核心修订】：
+              - strokeDasharray="1000 500"：
+                1. 单段流光长1000，空隙长500，总循环节为 1500。
+                2. 配合 CSS 中 3000 单位的动画行程，正好包含两个完整图案循环，确保循环时无瞬间重置感。
+                3. 由于流光占据了周期的 2/3，在视觉上能完美实现“第一段走到 2/3 时第二段开始”的密集衔接效果。
+          */}
           {showFlowingLines &&
             SVG_PATHS.map((d, i) => (
               <path
@@ -173,8 +171,7 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
                 d={d}
                 fill="none"
                 stroke="url(#glow-grad)"
-                strokeWidth="25"
-                /* 【配置说明】：此处调整“流光拖尾长度” (strokeDasharray 的第一个参数是流光长度，第二个是间距) */
+                strokeWidth="30"
                 strokeDasharray="1000 500"
                 className={
                   activity === "绽放"
@@ -187,7 +184,7 @@ const MagicCrest: React.FC<MagicCrestProps> = ({
               />
             ))}
 
-          {/* 6. 核心光点勾勒 (Inner Core)：最精细的白色极细边缘，增强质感 */}
+          {/* 6. 核心光点勾勒 */}
           {SVG_PATHS.map((d, i) => (
             <path
               key={`core-${i}`}

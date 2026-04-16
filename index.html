@@ -1,14 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Magic Crest Status Bar V1.4.0</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Crest Status Bar</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
       /* 呼吸发光动画 */
       @keyframes pulse-glow {
@@ -27,12 +24,12 @@
         }
       }
 
-      /* 能量线流动动画 */
+      /* 能量线流动动画 - 采用 3000 单位为一个完整循环，实现无缝衔接 */
       @keyframes flow-dash {
-        0% {
-          stroke-dashoffset: 1200;
+        from {
+          stroke-dashoffset: 3000;
         }
-        100% {
+        to {
           stroke-dashoffset: 0;
         }
       }
@@ -42,13 +39,11 @@
         0%,
         100% {
           opacity: 0.8;
-          filter: brightness(1.8) contrast(1.3)
-            drop-shadow(0 0 30px var(--glow-color));
+          filter: brightness(1.6) contrast(1.2);
         }
         50% {
           opacity: 0.4;
-          filter: brightness(1.1) contrast(1)
-            drop-shadow(0 0 10px var(--glow-color));
+          filter: brightness(1.1) contrast(0.9);
         }
       }
 
@@ -70,12 +65,12 @@
         transform-origin: center center;
       }
 
-      /* 【配置说明】：此处调整“纹身光线流转速度” (当前分别为 4s, 2s, 0.8s) */
+      /* 【配置说明】：流光速度调节。动画距离统一为 3000，速度随状态加快 */
       .animate-flow-charging {
-        animation: flow-dash 3.8s linear infinite;
+        animation: flow-dash 4s linear infinite;
       }
       .animate-flow-overflow {
-        animation: flow-dash 1.9s linear infinite;
+        animation: flow-dash 1.8s linear infinite;
       }
       .animate-flow-bloom {
         animation: flow-dash 0.7s linear infinite;
@@ -86,76 +81,57 @@
       .animate-flicker-white {
         animation: flicker-white 0.3s ease-in-out infinite;
       }
-      .flow-phase-1 {
-        animation-delay: 0s;
-      }
-      .flow-phase-2 {
-        animation-delay: calc(var(--flow-duration) / -3);
-      }
-
+      
       body {
-        background-color: #ffffff;
-        border: 1px solid rgba(255, 255, 255, 0.6);
-        border-radius: 8px;
+        background-color: #f8fafc;
         color: #1e293b;
         margin: 0;
         padding: 0;
-        /* 移除 overflow: hidden 解决父窗口高度无限增加的 Bug */
         overflow-x: hidden;
         overflow-y: auto;
-        font-family:
-          "Segoe UI",
-          system-ui,
-          -apple-system,
-          sans-serif;
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       }
 
       .glass-card {
-        border-radius: 8px;
+        border-radius: 20px;
         backdrop-filter: blur(8px);
         border: 1px solid rgba(255, 255, 255, 0.6);
         transition: all 0.3s ease;
       }
 
       .track {
-        border-radius: 8px;
+        border-radius: 10px;
         overflow: hidden;
-        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
       }
 
       .fill {
         height: 100%;
         transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-        border-radius: 8px;
+        border-radius: 10px;
       }
-
+      
       /* 自定义滚动条 */
-      ::-webkit-scrollbar {
-        width: 4px;
-      }
-      ::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: rgba(244, 63, 94, 0.2);
-        border-radius: 8px;
-      }
+      ::-webkit-scrollbar { width: 4px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: rgba(244, 63, 94, 0.2); border-radius: 10px; }
     </style>
-    <script type="importmap">
-      {
-        "imports": {
-          "react": "https://esm.sh/react@19.0.0",
-          "react-dom": "https://esm.sh/react-dom@19.0.0",
-          "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-          "lodash": "https://esm.sh/lodash@4.17.21",
-          "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-          "react/": "https://esm.sh/react@^19.2.3/"
-        }
-      }
-    </script>
-  </head>
-  <body>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "lodash": "https://esm.sh/lodash@4.17.21",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
     <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
+<script type="module" src="/index.tsx"></script>
+</body>
 </html>

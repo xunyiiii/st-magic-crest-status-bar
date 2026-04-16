@@ -1,11 +1,4 @@
-// export const CREST_LEVEL_COLORS: Record<number, string> = {
-//   0: "#94a3b8", // 未烙印
-//   1: "#ffb3c1", // Lv.1
-//   2: "#ff85a1", // Lv.2
-//   3: "#ff4d6d", // Lv.3
-//   4: "#c9184a", // Lv.4
-//   5: "#a4133c", // Lv.5
-// };
+import { CrestLevel } from "./types";
 
 /**
  * 【颜色配置】：纹身基础色 (Base Colors)
@@ -21,7 +14,7 @@ export const CREST_LEVEL_COLORS: Record<number, string> = {
   2: "#fe96ac", // Lv.2
   3: "#fd81a7", // Lv.3
   4: "#ff709b", // Lv.4
-  5: "#f92f76", // Lv.5
+  5: "#fb5087", // Lv.5
 };
 
 /**
@@ -35,19 +28,19 @@ export const CREST_HIGHLIGHT_COLORS: Record<number, string> = {
   2: "#fe96ac", // Lv.2
   3: "#fd81a7", // Lv.3
   4: "#ff709b", // Lv.4
-  5: "#f92f76", // Lv.5
+  5: "#fb5087", // Lv.5
 };
 
 export const CORRUPTION_LEVELS = [
-  { min: 0, max: 200, label: "尊严囚笼" },
-  { min: 201, max: 400, label: "认知失调" },
-  { min: 401, max: 600, label: "背德窃喜" },
-  { min: 601, max: 800, label: "献祭渴望" },
-  { min: 801, max: 1100, label: "完美祭品" },
+  { min: 0, max: 149, label: "冰霜初融" },
+  { min: 150, max: 299, label: "欲念萌芽" },
+  { min: 300, max: 499, label: "理智溃败" },
+  { min: 500, max: 799, label: "沉沦渴望" },
+  { min: 800, max: 1000, label: "欲海共生" },
 ];
 
 /**
- * 核心装备组定义 (体内、穿刺、展示)
+ * 核心装备组定义 (体内、穿越、展示)
  */
 export const CORE_GEAR_GROUPS = [
   {
@@ -55,19 +48,19 @@ export const CORE_GEAR_GROUPS = [
     label: "体内刺激",
     icon: "fa-vials",
     slots: [
-      { label: "阴道", path: "体内.阴道" },
-      { label: "后庭", path: "体内.后庭" },
-      { label: "尿道", path: "体内.尿道" },
+      { label: "通道", path: "体内.通道" },
+      { label: "菊花", path: "体内.菊花" },
+      { label: "水道", path: "体内.水道" },
     ],
   },
   {
     id: "crossing",
-    label: "穿刺触媒",
+    label: "穿越触媒",
     icon: "fa-gem",
     slots: [
-      { label: "乳头", path: "穿刺.乳头" },
-      { label: "肚脐", path: "穿刺.肚脐" },
-      { label: "阴蒂", path: "穿刺.阴蒂" },
+      { label: "突点", path: "穿越.突点" },
+      { label: "肚脐", path: "穿越.肚脐" },
+      { label: "结缔", path: "穿越.结缔" },
     ],
   },
   {
@@ -83,7 +76,6 @@ export const CORE_GEAR_GROUPS = [
 ];
 
 export const UI_DESIGN = {
-  // 模拟皮肤背景色 (白皙感)
   CARD_BG: "linear-gradient(135deg, #fffcfb 0%, #fff0eb 100%)",
   ACCENT_PINK: "#ff4d6d",
   BASE_FONT_SIZE: "14px",
