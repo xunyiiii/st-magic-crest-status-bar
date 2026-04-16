@@ -1,194 +1,120 @@
 import { registerMvuSchema } from "https://testingcf.jsdelivr.net/gh/StageDog/tavern_resource/dist/util/mvu_zod.js";
 
 export const Schema = z.object({
-  // --- 基础时空 ---
-  日期: z.string().prefault("2024年5月20日"),
-  时间: z.string().prefault("14:30"),
-  地点: z.string().prefault("大学综合楼-A402教研室"),
+  当前环境: z.object({
+    日期: z.string().prefault(() => "未知年份 盛夏"),
+    星期: z.string().prefault(() => "未知"),
+    时间: z.string().prefault(() => "午后"),
+    地点: z.string().prefault(() => "A大文学系教研室"),
+    周遭环境: z
+      .string()
+      .prefault(() => "门窗紧闭，空调冷风运作，空气中弥漫着压抑与隐秘的冷香"),
+  }),
 
-  // --- 核心角色：凌月 ---
   凌月: z.object({
-    // 1. 核心指标体系
-    状态: z.object({
+    心理状态: z.object({
       堕落度: z.coerce
         .number()
-        .transform((v) => _.clamp(v, 0, 1100))
-        .prefault(0)
-        .describe("决定演变阶段的关键变量"),
-      羞耻感: z.coerce
+        .transform((v) => _.clamp(v, 0, 1000))
+        .prefault(() => 5)
+        .describe("0为高岭之花，1000为彻底沦为专属淫奴"),
+      发情度: z.coerce
         .number()
         .transform((v) => _.clamp(v, 0, 100))
-        .prefault(90)
-        .describe("随堕落度升高而转化为快感"),
-      敏感度: z.coerce
-        .number()
-        .transform((v) => _.clamp(v, 0, 100))
-        .prefault(5)
-        .describe("身体开发的程度"),
-      体力: z.coerce
-        .number()
-        .transform((v) => _.clamp(v, 0, 100))
-        .prefault(90),
-      当前阶段: z.coerce
-        .number()
-        .transform((v) => _.clamp(v, 1, 5))
-        .prefault(1)
-        .describe(
-          "1:隐秘的异物, 2:失控的低烧, 3:血肉的共鸣, 4:华丽的蛛网, 5:完美的祭品",
+        .prefault(() => 0)
+        .describe("实时发情度，受刺激影响，0为正常，100为极度亢奋"),
+      表面伪装: z
+        .string()
+        .prefault(() => "维持清冷不染尘埃的讲师威严，语气严厉，强装镇定"),
+      真实想法: z
+        .string()
+        .prefault(
+          () => "极度恐慌视频曝光，对身体泛起的原始快感感到羞耻与无所适从",
         ),
     }),
 
-    // 2. 淫纹系统 (对应 system name="淫纹·契约")
-    淫纹: z.object({
-      进化等级: z.coerce
+    身体开发度: z.object({
+      乳房: z.coerce
+        .number()
+        .transform((v) => _.clamp(v, 0, 100))
+        .prefault(10)
+        .describe("乳房的敏感度"),
+      乳头: z.coerce
+        .number()
+        .transform((v) => _.clamp(v, 0, 100))
+        .prefault(15)
+        .describe("乳头的敏感度"),
+      尿道: z.coerce
+        .number()
+        .transform((v) => _.clamp(v, 0, 100))
+        .prefault(0)
+        .describe("尿道的敏感度"),
+      阴蒂: z.coerce
+        .number()
+        .transform((v) => _.clamp(v, 0, 100))
+        .prefault(20)
+        .describe("阴蒂的敏感度"),
+      阴道: z.coerce
+        .number()
+        .transform((v) => _.clamp(v, 0, 100))
+        .prefault(20)
+        .describe("阴道的敏感度"),
+      子宫: z.coerce
+        .number()
+        .transform((v) => _.clamp(v, 0, 100))
+        .prefault(0)
+        .describe("子宫的敏感度"),
+      肛门: z.coerce
+        .number()
+        .transform((v) => _.clamp(v, 0, 100))
+        .prefault(0)
+        .describe("肛门的敏感度"),
+    }),
+
+    外在着装: z.object({
+      上衣: z.string().prefault(() => "白色丝绸衬衫（扣子紧扣至顶）"),
+      下装: z.string().prefault(() => "黑色紧身铅笔裙"),
+      内衣: z.string().prefault("纯白无痕基础款文胸、纯白棉质布料内裤"),
+      袜子: z.string().prefault("黑色超薄长筒丝袜"),
+      鞋子: z.string().prefault("8公分黑色尖头细跟高跟鞋"),
+    }),
+
+    淫纹契约: z.object({
+      当前阶段: z.coerce
         .number()
         .transform((v) => _.clamp(v, 0, 5))
         .prefault(0)
-        .describe("淫纹进化阶段，决定外观与能力"),
-      当前活性: z
+        .describe(
+          "0:未烙印, 1:淡樱花粉·初识燥热, 2:柔雾粉·欲念萌芽, 3:蔷薇粉·理智溃败, 4:深玫瑰粉·沉沦渴望, 5:艳玫红·欲海共生",
+        ),
+      发光状态: z
         .enum(["沉寂", "呼吸", "充能", "满溢", "绽放"])
         .prefault("沉寂")
-        .describe("光效与热度状态"),
-      温度反馈: z.coerce
+        .describe("发光状态"),
+      局部温度: z.coerce
         .number()
-        .prefault(37)
-        .describe("腹部温度, 常态37，发情45"),
+        .transform((v) => _.clamp(v, 36, 45))
+        .prefault(() => 38)
+        .describe("发情时最高可达45度"),
     }),
 
-    // 3. 晶烁圣枷·装备栏 (对应 wardrobe name="私密装备·晶烁圣枷")
-    装备: z.object({
-      // 体内填充模组 (透明监牢)
-      体内: z.object({
-        阴道: z.string().nullable().prefault(null),
-        后庭: z.string().nullable().prefault(null),
-        尿道: z.string().nullable().prefault(null),
-      }),
-
-      // 穿刺与饰品 (肉体勋章)
-      穿刺: z.object({
-        乳头: z
-          .string()
-          .nullable()
-          .prefault(null)
-          .describe("例如：无 / 乳夹·晨露之吻 / 乳环·极乐回响"),
-        肚脐: z
-          .string()
-          .nullable()
-          .prefault(null)
-          .describe("是否佩戴[脐钉·枢纽之心]"),
-        阴蒂: z
-          .string()
-          .nullable()
-          .prefault(null)
-          .describe("无 / 阴蒂扣·花间蜜语 / 阴蒂环·潮汐之心"),
-      }),
-
-      刺激模组: z.object({
-        部署位置: z
-          .array(
-            z.object({
-              点位: z
-                .string()
-                .describe(
-                  "锚点装备/身体部位名称（如阴蒂环、乳环、宫颈塞·月之泪、阴蒂、乳头、G点、肛门、阴道穹窿）",
-                ),
-              震动: z.boolean().describe("是否处于震动中").default(false),
-            }),
-          )
-          .transform((arr) => {
-            // 去除空元素，保持数组整洁（可选，防止删除后残留空对象）
-            return arr.filter((item) => item.点位 && item.点位.trim() !== "");
-          })
-          .prefault(() => []),
-        控制模式: z
-          .enum(["待机", "随机游走", "声控惩罚", "心跳同频"])
-          .prefault("待机"),
-      }),
-
-      // 连接系统 (圣洁锁链)
-      连接系统: z.object({
-        项圈: z.string().nullable().prefault(null),
-        全身锁链: z
-          .boolean()
-          .default(false)
-          .describe("圣洁锁链系统是否完全闭合连接"),
-        运作模式: z
-          .enum(["待机", "快感路由", "警告与剥夺", "随机传导", "铃声陷阱"])
-          .prefault("待机"),
-        震动等级: z.coerce
-          .number()
-          .transform((v) => _.clamp(v, 0, 5))
-          .prefault(0),
-      }),
-
-      // 公开展示套件 (华服下的密语)
-      公开展示: z.object({
-        胸针: z
-          .string()
-          .nullable()
-          .prefault(null)
-          .describe("是否佩戴[胸针·雪境之心]"),
-        腰链: z
-          .string()
-          .nullable()
-          .prefault(null)
-          .describe("是否佩戴[腰链·坠落星河]"),
-        饰链: z.string().nullable().prefault(null).describe("例如: 大腿环链"),
-      }),
-
-      // 扩展配件 (兽化组件)
-      兽化组件: z.object({
-        尾巴: z.string().nullable().prefault(null).describe("是否佩戴尾巴组件"),
-        伪装延展: z
-          .boolean()
-          .prefault(false)
-          .describe("尾巴是否通过内部道具连接"),
-      }),
-    }),
-
-    // 4. 外在伪装与崩坏 (对应 system name="隐秘崩坏")
-    伪装: z.object({
-      当前着装: z
-        .string()
-        .prefault("[禁欲标杆·经典白衬衫]")
-        .describe("对应衣橱ID名称"),
-      表面状态: z
-        .string()
-        .prefault("正在教研室整理下午课程的资料")
-        .describe("例如：正在讲课 / 正在与未婚夫用餐"),
-      生理破绽: z
-        .string()
-        .prefault("无")
-        .describe("例如：面色潮红 / 双腿发抖 / 眼神涣散"),
-      当前借口: z
-        .string()
-        .prefault("无")
-        .describe("用于掩饰异样的借口，如'低烧'、'静电'"),
-    }),
-
-    // 5. 心理与认知 (体现表里反差)
-    心理: z.object({
-      内心独白: z
-        .string()
-        .describe("此时此刻最真实的淫荡或恐惧想法")
-        .prefault("..."),
-      公众印象: z
-        .string()
-        .describe("学生或NPC眼中的高岭之花形象")
-        .prefault("以严谨和禁欲著称的美女讲师"),
-    }),
-  }),
-
-  // --- 世界与NPC互动 ---
-  环境: z.object({
-    周围人群: z
-      .string()
-      .prefault("无")
-      .describe("例如：满座的学生 / 未婚夫姚北律 / 家族长辈"),
-    噪音: z.string().describe("可能触发声控惩罚的声音环境"),
-    安全等级: z
-      .enum(["高", "中", "低"])
-      .describe("高(安全私密空间)/中(半私密空间)/低(易暴露的公共场合)"),
+    私密装备: z
+      .array(
+        z.object({
+          佩戴部位: z
+            .string()
+            .describe(
+              "如：口部、颈部、乳头、乳房、肚脐、阴蒂、尿道、阴道、子宫、肛门、大腿等",
+            ),
+          装备名称: z.string().describe("具体玩具/装备名称"),
+          运行状态: z.string().describe("如：待机、低频电流、高频震动、吸吮中"),
+          刺激强度: z.coerce
+            .number()
+            .transform((v) => _.clamp(v, 0, 10))
+            .prefault(() => 0),
+        }),
+      )
+      .prefault(() => []),
   }),
 
   // --- 记忆/历史记录 (标准 MVU 格式) ---
